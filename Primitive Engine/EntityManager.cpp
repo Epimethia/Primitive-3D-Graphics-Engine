@@ -13,11 +13,12 @@
 
 #include "EntityManager.h"
 
-std::shared_ptr<Mesh> EntityManager::Cube_Mesh = nullptr;
+std::shared_ptr<Mesh> EntityManager::Plane_Mesh = nullptr;
 std::shared_ptr<Mesh> EntityManager::Pyramid_Mesh = nullptr;
 std::shared_ptr<Mesh> EntityManager::Sphere_Mesh = nullptr;
 
 std::shared_ptr<Model> EntityManager::Player_Model = nullptr;
+std::shared_ptr<Model> EntityManager::Player_Stencil_Model = nullptr;
 
 GLuint EntityManager::ObjectShader;
 GLuint EntityManager::ModelShader;
@@ -35,56 +36,22 @@ EntityManager::EntityManager() {
 
 	GLuint VAO, VBO, EBO, Texture;
 	int width, height;
-	#pragma region GENERATING CUBE MESH
-	std::cout << "Generating Cube Mesh\n";
+
+	#pragma region GENERATING PLANE MESH
+	std::cout << "Generating PLane Mesh\n";
 	#pragma region Generating VAO
-	GLfloat CubeVerts[] = {
+	GLfloat PlaneVerts[] = {
 		// Positions             // Normal Coords        // TexCoords
 		// Front Face
-		-1.0f, 1.0f, 1.0f,       0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
-		1.0f, 1.0f, 1.0f,        0.0f, 0.0f, 1.0f,      1.0f, 0.0f,
-		1.0f, -1.0f, 1.0f,       0.0f, 0.0f, 1.0f,      1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,      0.0f, 0.0f, 1.0f,      0.0f, 1.0f,
-
-		// Right Face
-		1.0f, 1.0f, 1.0f,        1.0f, 0.0f, 0.0f,      0.0f, 0.0f,
-		1.0f, 1.0f, -1.0f,       1.0f, 0.0f, 0.0f,      1.0f, 0.0f,
-		1.0f, -1.0f, -1.0f,      1.0f, 0.0f, 0.0f,      1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f,       1.0f, 0.0f, 0.0f,      0.0f, 1.0f,
-
-		// Back Face
-		1.0f, 1.0f, -1.0f,       0.0f, 0.0f, -1.0f,     0.0f, 0.0f,
-		-1.0f, 1.0f, -1.0f,      0.0f, 0.0f, -1.0f,     1.0f, 0.0f,
-		-1.0f, -1.0f, -1.0f,     0.0f, 0.0f, -1.0f,     1.0f, 1.0f,
-		1.0f, -1.0f, -1.0f,      0.0f, 0.0f, -1.0f,     0.0f, 1.0f,
-
-		// Left Face
-		-1.0f, 1.0f, -1.0f,      -1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-		-1.0f, 1.0f, 1.0f,       -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-		-1.0f, -1.0f, 1.0f,      -1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,     -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-
-		// Top Face
-		-1.0f, 1.0f, -1.0f,      0.0f, 1.0f, 0.0f,      0.0f, 0.0f,
-		1.0f, 1.0f, -1.0f,       0.0f, 1.0f, 0.0f,      1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f,        0.0f, 1.0f, 0.0f,      1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,       0.0f, 1.0f, 0.0f,      0.0f, 1.0f,
-
-		// Bottom Face
-		-1.0f, -1.0f, 1.0f,      0.0f, -1.0f, 0.0f,     0.0f, 0.0f,
-		1.0f, -1.0f, 1.0f,       0.0f, -1.0f, 0.0f,     1.0f, 0.0f,
-		1.0f, -1.0f, -1.0f,      0.0f, -1.0f, 0.0f,     1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,     0.0f, -1.0f, 0.0f,     0.0f, 1.0f,
+		-1.0f, 1.0f, 0.0f,       0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,        0.0f, 0.0f, 1.0f,      2.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,       0.0f, 0.0f, 1.0f,      2.0f, 2.0f,
+		-1.0f, -1.0f, 0.0f,      0.0f, 0.0f, 1.0f,      0.0f, 2.0f,
 	};
 
 	//Defining Cube Indices
-	GLuint CubeIndices[] = {
-		0, 1, 2,		0, 2, 3,		// Front Face
-		4, 5, 6,		4, 6, 7,		// Right Face
-		8, 9, 10,		8, 10, 11,		// Back Face
-		12, 13, 14,		12, 14, 15,		// Left Face
-		16, 17, 18,		16, 18, 19,		// Top Face
-		20, 21, 22,		20, 22, 23,		// Bottom Face
+	GLuint PlaneIndices[] = {
+		0, 1, 2,		0, 2, 3		// Front Face
 	};
 
 	//Generating buffers
@@ -96,7 +63,7 @@ EntityManager::EntityManager() {
 
 	//Binding and setting buffer data
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(CubeVerts), CubeVerts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(PlaneVerts), PlaneVerts, GL_STATIC_DRAW);
 
 	//Enabling the positional floats
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat),
@@ -115,7 +82,7 @@ EntityManager::EntityManager() {
 
 	//Generating EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(CubeIndices), CubeIndices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(PlaneIndices), PlaneIndices, GL_STATIC_DRAW);
 	#pragma endregion
 
 	#pragma region Generating Textures
@@ -125,7 +92,7 @@ EntityManager::EntityManager() {
 
 	//Getting the image from filepath
 	unsigned char* image = SOIL_load_image(
-		POWER_UP_1,
+		RIVERBED_TEXTURE,
 		&width,
 		&height,
 		0,
@@ -163,13 +130,12 @@ EntityManager::EntityManager() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	#pragma endregion
 
-	Cube_Mesh = std::make_shared<Mesh>();
-	Cube_Mesh->VAO = VAO;
-	Cube_Mesh->NumIndices = sizeof(CubeIndices);
-	Cube_Mesh->Texture = Texture;
-	Cube_Mesh->Shader = ObjectShader;
+	Plane_Mesh = std::make_shared<Mesh>();
+	Plane_Mesh->VAO = VAO;
+	Plane_Mesh->NumIndices = sizeof(PlaneIndices);
+	Plane_Mesh->Texture = Texture;
+	Plane_Mesh->Shader = ObjectShader;
 	#pragma endregion
-
 
 	#pragma region GENERATING PYRAMID MESH
 	std::cout << "Generating Pyramid Mesh\n";
@@ -239,7 +205,7 @@ EntityManager::EntityManager() {
 
 	//Getting the image from filepath
 	image = SOIL_load_image(
-		POWER_UP_2,
+		"Assets/Sprite/Rayman.jpg",
 		&width,
 		&height,
 		0,
@@ -287,9 +253,9 @@ EntityManager::EntityManager() {
 
 	#pragma region GENERATING SPHERE MESH
 	std::cout << "Generating Sphere Mesh\n";
-	#pragma region Generating VAO
+#pragma region Generating VAO
 	float radius = 1.0f;
-	const int sections = 8;
+	const int sections = 16;
 	const int vertexAttrib = 8;
 	const int indexPerQuad = 6;
 	const float PI = 3.14159265359f;
@@ -357,9 +323,9 @@ EntityManager::EntityManager() {
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Generating Textures
+#pragma region Generating Textures
 	//Generating and binding the texture
 	glGenTextures(1, &Texture);
 	glBindTexture(GL_TEXTURE_2D, Texture);
@@ -394,7 +360,7 @@ EntityManager::EntityManager() {
 
 	//Setting texture filters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-					GL_LINEAR_MIPMAP_LINEAR);
+		GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//Freeing up data
@@ -402,7 +368,7 @@ EntityManager::EntityManager() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	#pragma endregion
+#pragma endregion
 
 	Sphere_Mesh = std::make_shared<Mesh>();
 	Sphere_Mesh->VAO = VAO;
@@ -415,6 +381,11 @@ EntityManager::EntityManager() {
 	std::cout << "Generating Boat Mesh\n";
 	Player_Model = std::make_shared<Model>(PLAYER_MODEL, ModelShader);
 	#pragma endregion
+
+	#pragma region GENERATING BOAT2 MESH
+	std::cout << "Generating Boat2 Mesh\n";
+	Player_Stencil_Model = std::make_shared<Model>(PLAYER_STENCIL_MODEL, ModelShader);
+	#pragma endregion
 }
 
 //Name:					~EntityManager()
@@ -422,7 +393,7 @@ EntityManager::EntityManager() {
 //Return Type:		None
 //Description:		Destructor for the entity manager
 EntityManager::~EntityManager() {
-	Cube_Mesh = nullptr;
+	Plane_Mesh = nullptr;
 	Pyramid_Mesh = nullptr;
 	Sphere_Mesh = nullptr;
 	Player_Model = nullptr;
@@ -440,16 +411,19 @@ void EntityManager::DestroyInstance() {
 }
 
 std::shared_ptr<Mesh> EntityManager::GetMesh(ENTITY_ATTRIBUTE _EntityType) {
-	if (_EntityType == ATTACK_POWERUP) return Cube_Mesh;
+	if (_EntityType == PLANE_ENTITY) return Plane_Mesh;
 
-	if (_EntityType == SPEED_POWERUP) return Pyramid_Mesh;
+	if (_EntityType == PYRAMID_ENTITY) return Pyramid_Mesh;
 	
-	if (_EntityType == BULLET_ENTITY) return Sphere_Mesh;
-		
-	else return nullptr;
+	if (_EntityType == SPHERE_ENTITY) return Sphere_Mesh;
+
+	//if (_EntityType == PLANE_ENTITY) return Plane_Mesh;
+
+	else return nullptr; 
 }
 
 std::shared_ptr<Model> EntityManager::GetModel(ENTITY_ATTRIBUTE _EntityType) {
 	if (_EntityType == PLAYER_ENTITY) return Player_Model;
+	if (_EntityType == PLAYER_STENCIL) return Player_Stencil_Model;
 	else return nullptr;
 }

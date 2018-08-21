@@ -22,4 +22,6 @@ private:
 	static void NormKeyUp(unsigned char key, int x, int y);
 	static void SpecialKeyDown(int key, int x, int y);
 	static void SpecialKeyUp(int key, int x, int y);
+	
+	static bool AntiAliasing;
 };

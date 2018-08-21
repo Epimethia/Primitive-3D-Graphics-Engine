@@ -2,6 +2,7 @@
 in vec2 fragTexCoord;
 in vec3 fragNormal;
 in vec3 fragPos;
+in vec4 mWorldPos;
 
 out vec4 color;
 uniform sampler2D tex;
@@ -36,5 +37,13 @@ void main() {
     vec3 specular = lightSpecStr * spec * lightColor;
 
     color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord);
+
+    float d = distance(mWorldPos.xyz, camPos);
+    float lerp = (d - 1.0f)/10.0f;
+    lerp = clamp(lerp, 0.0, 1.0);
+    vec4 vFogColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+
+    color = mix(color, vFogColor, lerp);
     
 }
+

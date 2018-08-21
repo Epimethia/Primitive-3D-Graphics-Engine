@@ -86,10 +86,14 @@ public:
 		
 		glm::mat4 MVP = _VPMatrix * _TransformMatrix;
 
+		glUniformMatrix4fv(glGetUniformLocation(_Program, "VP"), 1, GL_FALSE, glm::value_ptr(_VPMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(_Program, "model"), 1, GL_FALSE, glm::value_ptr(_TransformMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(_Program, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
+		glUniform3fv(glGetUniformLocation(_Program, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
+
 		GLfloat currentTime = static_cast<GLfloat>(glutGet(GLUT_ELAPSED_TIME));
 		glUniform1f(glGetUniformLocation(_Program, "currentTime"), currentTime);
+
 
 		//Drawing mesh
 		glBindVertexArray(this->VAO);
@@ -99,6 +103,7 @@ public:
 		//Disabling backface culling
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_BLEND);
+		glFrontFace(GL_CW);
 
 		//Clearing textures
 		for (GLuint i = 0; i < this->textures.size(); i++) {
