@@ -1,10 +1,14 @@
 #include "Environment.h"
 #include "InputManager.h"
 
+/*Constructor for the environment object. Does nothing here. */
 Environment::Environment() {
 
 }
 
+/*Initialization function for the environment. This calls and*/
+/*initializes all the objects present in the scene, as well  */
+/*as the instance and input managers. Should not ever fail.  */
 void Environment::Init() {
 	EntityManager::GetInstance();
 	InputManager::InputManager();
@@ -36,6 +40,7 @@ void Environment::Process(float _DeltaTick) {
 
 void Environment::Render(float _DeltaTick) {
 
+	//Enabling the stencil test and setting parameters
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -44,21 +49,20 @@ void Environment::Render(float _DeltaTick) {
 	//drawing the first cube
 	ShipModel.Process(_DeltaTick);
 
+	//Switching the stencil test mode to process the next layer
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 
+	//Rendering the mask
 	ShipModelMask.Process(_DeltaTick);
 
+	//turning the stencil test off
 	glStencilMask(0xFF);
 	glDisable(GL_STENCIL_TEST);
 
-
-	//glPolygonMode(GL_FRONT, GL_LINE);
+	//Calling process on all the objects in the scene
 	Ball.Process(_DeltaTick);
-	//glPolygonMode(GL_FRONT, GL_FILL);
-
 	pyr.Process(_DeltaTick);
-
 	pl0.Process(_DeltaTick);
 	pl1.Process(_DeltaTick);
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Resource.h"
 
+/*A camera class for the scene. Really does nothing more than*/
+/*just update the global MVP matrix.						 */
 class Camera {
 public:
 	~Camera();
