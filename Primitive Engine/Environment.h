@@ -3,6 +3,7 @@
 #include "Resource.h"
 #include "Entity.h"
 #include "CubeMap.h"
+#include "Terrain.h"
 
 class Environment {
 public:
@@ -22,4 +23,6 @@ private:
 	Plane pl1;
 
 	Pyramid pyr;
+
+	Terrain t;
 };

@@ -4,10 +4,10 @@
 #include "Clock.h"
 #include "InputManager.h"
 #include "Environment.h"
-
 float g_DeltaTime = 0.0f;
 
 Environment env;
+Terrain t;
 
 /*Initializing the entire program. This function gets called in glutInit()*/
 /*This turns on backface culling and the depth test (useful for some other*/
@@ -17,9 +17,10 @@ void Initialize() {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-
 	glDisable(GL_MULTISAMPLE);
-	env.Init();
+	//env.Init();
+	EntityManager::GetInstance();
+	t.Init();
 }
 
 /*Where rendering occurs. You should have one single object that has a	  */
@@ -28,15 +29,12 @@ void Initialize() {
 void Render(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	//Scissor Test
-	glEnable(GL_SCISSOR_TEST);
-	glScissor(0, 100, 750, 550);
 
 	//RENDER ITEMS HERE
-	env.Render(g_DeltaTime);
-
+	//env.Render(g_DeltaTime);
+	t.Render();
 	//-----------------
-	glDisable(GL_SCISSOR_TEST);
+
 	glutSwapBuffers();
 }
 
@@ -50,7 +48,7 @@ void Process(void) {
 	//DO LOGIC PROCESSING HERE
 	//Use g_DeltaTime if possible
 
-	env.Process(g_DeltaTime);
+	//env.Process(g_DeltaTime);
 
 	//------------------------
 
@@ -89,7 +87,7 @@ int main(int argc, char **argv) {
 	glutCreateWindow("Piroots of the CurryBeans");
 
 	//Window Background color (default pixel color when nothing is rendered over it)
-	glClearColor(0.5, 0.5, 0.5, 1.0);
+	glClearColor(0.0, 1.0, 0.0, 1.0);
 
 	//Glut initialization functions.
 	glewInit();
