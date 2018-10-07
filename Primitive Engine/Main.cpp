@@ -6,8 +6,7 @@
 #include "Environment.h"
 float g_DeltaTime = 0.0f;
 
-Environment env;
-Terrain t;
+Terrain* t = new Terrain;
 
 /*Initializing the entire program. This function gets called in glutInit()*/
 /*This turns on backface culling and the depth test (useful for some other*/
@@ -18,9 +17,10 @@ void Initialize() {
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 	glDisable(GL_MULTISAMPLE);
-	//env.Init();
 	EntityManager::GetInstance();
-	t.Init();
+	InputManager::Init();
+	Camera::GetInstance();
+	t->Init();
 }
 
 /*Where rendering occurs. You should have one single object that has a	  */
@@ -31,8 +31,7 @@ void Render(void) {
 
 
 	//RENDER ITEMS HERE
-	//env.Render(g_DeltaTime);
-	t.Render();
+	t->Render();
 	//-----------------
 
 	glutSwapBuffers();
@@ -43,12 +42,11 @@ void Render(void) {
 /*pass in DeltaTime (as updates to the g_DeltaTime are called at the start*/
 /*of this loop.															  */
 void Process(void) {
+	InputManager::ProcessKeyInput(g_DeltaTime);
 	g_DeltaTime = Clock::GetDeltaTime();
 
 	//DO LOGIC PROCESSING HERE
 	//Use g_DeltaTime if possible
-
-	//env.Process(g_DeltaTime);
 
 	//------------------------
 
@@ -87,7 +85,7 @@ int main(int argc, char **argv) {
 	glutCreateWindow("Piroots of the CurryBeans");
 
 	//Window Background color (default pixel color when nothing is rendered over it)
-	glClearColor(0.0, 1.0, 0.0, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	//Glut initialization functions.
 	glewInit();

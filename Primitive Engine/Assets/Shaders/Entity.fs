@@ -22,28 +22,29 @@ void main() {
     /*|            PHONG SHADER             |*/
     /*---------------------------------------*/
 
-    //AMBIENT COLOR
-    vec3 ambient = ambientStr * ambientColor;
-    // Light Direction
-    vec3 norm = normalize(fragNormal);
-    vec3 lightDir = normalize(fragPos - lightPos);
-    // Diffuse Coloring
-    float diffuseStr = max(dot(norm, -lightDir ), 0.0f);
-    vec3 diffuse = diffuseStr * lightColor;
+    // //AMBIENT COLOR
+    // vec3 ambient = ambientStr * ambientColor;
+    // // Light Direction
+    // vec3 norm = normalize(fragNormal);
+    // vec3 lightDir = normalize(fragPos - lightPos);
+    // // Diffuse Coloring
+    // float diffuseStr = max(dot(norm, -lightDir ), 0.0f);
+    // vec3 diffuse = diffuseStr * lightColor;
 
-    // Specular Highlight
-    vec3 negViewDir = normalize(camPos - fragPos);
-    vec3 reflectDir = reflect(lightDir, norm);
-    float spec = pow(max(dot(negViewDir , reflectDir), 0.0f), shininess);
-    vec3 specular = lightSpecStr * spec * lightColor;
+    // // Specular Highlight
+    // vec3 negViewDir = normalize(camPos - fragPos);
+    // vec3 reflectDir = reflect(lightDir, norm);
+    // float spec = pow(max(dot(negViewDir , reflectDir), 0.0f), shininess);
+    // vec3 specular = lightSpecStr * spec * lightColor;
 
-    color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord);
+    // color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord);
 
-    float d = distance(mWorldPos.xyz, camPos);
-    float lerp = (d - 1.0f)/10.0f;
-    lerp = clamp(lerp, 0.0, 1.0);
-    vec4 vFogColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    color = mix(color, vFogColor, lerp);
+    // float d = distance(mWorldPos.xyz, camPos);
+    // float lerp = (d - 1.0f)/10.0f;
+    // lerp = clamp(lerp, 0.0, 1.0);
+    // vec4 vFogColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    // color = mix(color, vFogColor, lerp);
+    color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     
 }
 

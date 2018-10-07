@@ -17,7 +17,9 @@ private:
 	glm::vec3 ObjRotation;
 	glm::vec3 ObjPos;
 	GLuint VAO, VBO, EBO, Shader, Texture;
-	int NumIndices;
 
-	Plane p;
+	void LoadHeightMap();
+	void GenerateVertBuffer(int _FieldSize, float _Separation);
+	void GenerateIndices(int _GridSize, int &_NumIndices);
+	int numIndices;
 };

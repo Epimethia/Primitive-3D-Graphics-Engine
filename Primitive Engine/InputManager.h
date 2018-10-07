@@ -11,8 +11,9 @@ enum KEYSTATE {
 class InputManager {
 public:
 	InputManager();
-	static void ProcessKeyInput();
+	static void ProcessKeyInput(float _dt);
 	static void ProcessSpecialKeyInput();
+	static void Init();
 
 	static unsigned char KeyArray[255];
 	static unsigned char KeySpecialArray[255];

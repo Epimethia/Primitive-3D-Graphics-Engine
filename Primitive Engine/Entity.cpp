@@ -31,8 +31,6 @@ void Entity::Render() {
 	//Binding the array
 	glBindVertexArray(VAO);
 
-
-
 	//Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -273,11 +271,6 @@ void Plane::Process(float _DeltaTime) {
 	//Binding the array
 	glBindVertexArray(VAO);
 
-	//Setting back face culling
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CW);
-	glEnable(GL_CULL_FACE);
-
 	//Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -288,6 +281,7 @@ void Plane::Process(float _DeltaTime) {
 
 	//Sending the texture to the GPU via uniform
 	glUniform1i(glGetUniformLocation(Shader, "tex"), 0);
+
 	//Translating the cube (x,y,z)
 	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), ObjPos / 375.0f);
 
@@ -314,10 +308,16 @@ void Plane::Process(float _DeltaTime) {
 
 	glm::mat4 MVP = VPMatrix * ModelMatrix;
 
+	glUniformMatrix4fv(glGetUniformLocation(Shader, "VP"), 1, GL_FALSE, glm::value_ptr(VPMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(Shader, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
 	glUniformMatrix4fv(glGetUniformLocation(Shader, "model"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 	glUniform3fv(glGetUniformLocation(Shader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
-	//Drawing the entity
+
+	//Setting back face culling
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
+	glEnable(GL_CULL_FACE);
+
 	glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
 
 	//Disabling backface culling

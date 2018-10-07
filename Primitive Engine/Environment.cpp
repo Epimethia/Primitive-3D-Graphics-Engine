@@ -12,6 +12,7 @@ Environment::Environment() {
 void Environment::Init() {
 	EntityManager::GetInstance();
 	InputManager::InputManager();
+	Camera::GetInstance();
 
 	//main ship
 	ShipModel = Player(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -30,24 +31,25 @@ void Environment::Init() {
 	pyr = Pyramid(glm::vec3(400.0f, 0.0f, 100.0f));
 	pyr.GetScale() = glm::vec3(0.5f, 0.5f, 0.5f);
 
-	t.Init();
+	//t.Init();
 	
 }
 
 void Environment::Process(float _DeltaTick) {
-	InputManager::ProcessKeyInput();
 }
 
 void Environment::Render(float _DeltaTick) {
 
 	//Enabling the stencil test and setting parameters
 
-
 	//Calling process on all the objects in the scene
+	pl0.Process(_DeltaTick);
 	//Ball.Process(_DeltaTick);
-	//pyr.Process(_DeltaTick);
-	//pl0.Process(_DeltaTick);
+	
+
 	//pl1.Process(_DeltaTick);
-	t.Render();
+	//pyr.Process(_DeltaTick);
+	
+	//t.Render();
 	
 }
