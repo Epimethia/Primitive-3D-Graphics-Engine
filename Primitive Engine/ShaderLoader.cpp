@@ -46,25 +46,13 @@ GLuint ShaderLoader::CreateShader(GLenum shaderType, std::string source, std::st
 	return shader;
 }
 
+
 GLuint ShaderLoader::CreateProgram(std::string vertexShaderFilename, std::string fragmentShaderFilename) {
 	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
 	std::string fragment_shader_code = ReadShader(fragmentShaderFilename);
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 
-	if (!Shaders.empty()) {
-		for (auto it = Shaders.begin(); it != Shaders.end(); ++it) {
-			if (it->first == vertexShaderFilename) {
-				std::cout << "Vertex Shader already assigned. ID: " << it->second << std::endl;
-				return 0;
-			}
-			if (it->first == fragmentShaderFilename) {
-				std::cout << "Fragment Shader already assigned. ID: " << it->second << std::endl;
-				return 0;
-			}
-		}
-		
-	}
 	vertex_shader = CreateShader(GL_VERTEX_SHADER, vertex_shader_code, "vertex shader");
 	Shaders[vertexShaderFilename] = vertex_shader;
 	std::cout << "Vertex Shader created. Assigned ID: " << Shaders[vertexShaderFilename] << std::endl;
@@ -85,6 +73,49 @@ GLuint ShaderLoader::CreateProgram(std::string vertexShaderFilename, std::string
 	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
 	//check for link errors
 	if (link_result == GL_FALSE) {
+
+		int info_log_length = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+		std::vector<char> program_log(info_log_length);
+		glGetProgramInfoLog(program, info_log_length, NULL, &program_log[0]);
+		std::cout << "Shader Loader : LINK ERROR" << std::endl << &program_log[0] << std::endl;
+		return 0;
+	}
+	return program;
+}
+
+GLuint ShaderLoader::CreateProgram(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename){
+	std::string vertex_shader_code = ReadShader(vertexShaderFilename);
+	std::string fragment_shader_code = ReadShader(fragmentShaderFilename);
+	std::string geometry_shader_code = ReadShader(geometryShaderFilename);
+	GLuint vertex_shader;
+	GLuint fragment_shader;
+	GLuint geometry_shader;
+
+	vertex_shader = CreateShader(GL_VERTEX_SHADER, vertex_shader_code, "vertex shader");
+	Shaders[vertexShaderFilename] = vertex_shader;
+	std::cout << "Vertex Shader created. Assigned ID: " << Shaders[vertexShaderFilename] << std::endl;
+
+	fragment_shader = CreateShader(GL_FRAGMENT_SHADER, fragment_shader_code, "fragment shader");
+	Shaders[fragmentShaderFilename] = fragment_shader;
+	std::cout << "Fragment Shader created. Assigned ID: " << Shaders[fragmentShaderFilename] << std::endl;
+
+	geometry_shader = CreateShader(GL_GEOMETRY_SHADER, geometry_shader_code, "geometry shader");
+	Shaders[geometryShaderFilename] = geometry_shader;
+	std::cout << "Geometry Shader created. Assigned ID: " << Shaders[geometryShaderFilename] << std::endl;
+
+	//read the shader files and save the code
+	int link_result = 0;
+	//create the program handle, attatch the shaders and link it
+	GLuint program = glCreateProgram();
+	glAttachShader(program, Shaders[vertexShaderFilename]);
+	glAttachShader(program, Shaders[fragmentShaderFilename]);
+	glAttachShader(program, Shaders[geometryShaderFilename]);
+
+	glLinkProgram(program);
+	glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+	//check for link errors
+	if (link_result == GL_FALSE){
 
 		int info_log_length = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);

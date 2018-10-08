@@ -3,10 +3,18 @@
 #include "Camera.h"
 #include "Clock.h"
 #include "InputManager.h"
-#include "Environment.h"
+#include "Terrain.h"
+#include "PlayerObject.h"
+#include "GeometryModel.h"
+#include "Text.h"
+
 float g_DeltaTime = 0.0f;
 
 Terrain* t = new Terrain;
+PlayerObject* p = new PlayerObject;
+Text* tx;
+GeometryModel* gm = new GeometryModel;
+void ProcessInput();
 
 /*Initializing the entire program. This function gets called in glutInit()*/
 /*This turns on backface culling and the depth test (useful for some other*/
@@ -18,9 +26,12 @@ void Initialize() {
 	glFrontFace(GL_CW);
 	glDisable(GL_MULTISAMPLE);
 	EntityManager::GetInstance();
-	InputManager::Init();
 	Camera::GetInstance();
+	InputManager::Init();
 	t->Init();
+	p->Init(glm::vec3(0.0f, 0.0f, 0.0f));
+	tx = new Text("Hello", ARIAL, glm::vec2(0.0f, 800.0f), 10);
+	gm->Init(p->ObjPos);
 }
 
 /*Where rendering occurs. You should have one single object that has a	  */
@@ -29,10 +40,12 @@ void Initialize() {
 void Render(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-
-	//RENDER ITEMS HERE
+	//RENDER ITEMS HERE//
+	p->Render();
 	t->Render();
-	//-----------------
+	tx->Render();
+	gm->Render();
+	//-----------------//
 
 	glutSwapBuffers();
 }
@@ -42,15 +55,17 @@ void Render(void) {
 /*pass in DeltaTime (as updates to the g_DeltaTime are called at the start*/
 /*of this loop.															  */
 void Process(void) {
-	InputManager::ProcessKeyInput(g_DeltaTime);
 	g_DeltaTime = Clock::GetDeltaTime();
 
-	//DO LOGIC PROCESSING HERE
+	//DO LOGIC PROCESSING HERE//
 	//Use g_DeltaTime if possible
 
-	//------------------------
-
+	ProcessInput();
+	p->Process(g_DeltaTime);
+	Camera::Process();
+	//------------------------//
 	glutPostRedisplay();
+
 }
 
 /*Any functions that need to be called when the the program ends. Clear   */
@@ -96,4 +111,41 @@ int main(int argc, char **argv) {
 	glutCloseFunc(Exit);
 	glutMainLoop();
 	return 0;
+}
+
+void ProcessInput(){
+	if (p->ObjPos.x > 2.55f){
+		p->ObjPos.x = 2.55f;
+		return;
+	}
+	if (p->ObjPos.x < -2.55f){
+		p->ObjPos.x = -2.55f;
+		return;
+	}
+	if (p->ObjPos.y > 2.55f){
+		p->ObjPos.y = 2.55f;
+		return;
+	}
+	if (p->ObjPos.y < -2.55f){
+		p->ObjPos.y = -2.55f;
+		return;
+	}
+
+	if (InputManager::KeyArray['w'] == KEY_HELD) {
+		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y += 0.1f * g_DeltaTime, p->ObjPos.z );
+	}
+	if (InputManager::KeyArray['s'] == KEY_HELD){
+		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y -= 0.1f * g_DeltaTime, p->ObjPos.z);
+	}
+	if (InputManager::KeyArray['a'] == KEY_HELD){
+		p->ObjPos = glm::vec3(p->ObjPos.x -= 0.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z);
+	}
+	if (InputManager::KeyArray['d'] == KEY_HELD){
+		p->ObjPos = glm::vec3(p->ObjPos.x += 0.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z );
+	}
+	gm->Pos = p->ObjPos;
+	gm->Pos.z += 0.1f;
+	p->ObjPos.z = t->GetHeight(p->ObjPos.x, p->ObjPos.y) + 0.01f;
+	Camera::GetPos() = -glm::vec3(p->ObjPos.x, p->ObjPos.y + 1.0f, p->ObjPos.z-1.3f);
+	InputManager::ProcessKeyInput(g_DeltaTime);
 }

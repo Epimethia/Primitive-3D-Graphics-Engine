@@ -155,7 +155,7 @@ void CubeMap::Render() {
 			glm::vec3(0.0f, 0.0f, 1.0f)
 		);
 
-	glm::mat4 VPMat = Camera::GetMatrix() * model;
+	glm::mat4 VPMat = Camera::GetVPMatrix() * model;
 	glUniformMatrix4fv(glGetUniformLocation(Shader, "MVP"), 1, GL_FALSE, glm::value_ptr(VPMat));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

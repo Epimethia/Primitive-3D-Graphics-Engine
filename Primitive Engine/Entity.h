@@ -41,34 +41,6 @@ protected:
 	std::shared_ptr<Model> model;
 };
 
-class Player : public ModelEntity {
-public:
-	Player();
-	Player(glm::vec3 _Pos);
-	void Process(float _DeltaTime);
-	glm::vec3& GetTarget() { return Target; };
-
-private:
-	void Render();
-	glm::vec3 Target;
-	float ShootCooldown;
-	float ShootTimer;
-	glm::vec3 BulletVelocity;
-	SoundManager sm;
-};
-
-class Stencil : public Player {
-public:
-	Stencil() {};
-	Stencil(glm::vec3 _Pos) {
-		ObjPos = _Pos;
-		ObjScale = glm::vec3(0.05f, 0.05f, -0.05f);
-		ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-		ObjVel = { 0.0f, 0.0f, 0.0f };
-		model = EntityManager::GetModel(PLAYER_STENCIL);
-	}
-};
-
 class Sphere : public Entity {
 public:
 	Sphere() {};

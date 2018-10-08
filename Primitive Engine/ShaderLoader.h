@@ -15,6 +15,7 @@ public:
 	ShaderLoader();
 	~ShaderLoader();
 	GLuint CreateProgram(std::string VertexShaderFilename, std::string FragmentShaderFilename);
+	GLuint CreateProgram(std::string vertexShaderFilename, std::string fragmentShaderFilename, std::string geometryShaderFilename);
 
 	std::map<std::string, GLuint> Shaders;
 };

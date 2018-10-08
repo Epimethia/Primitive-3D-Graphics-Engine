@@ -90,7 +90,7 @@ void Entity::Render() {
 };
 
 void Entity::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
+	VPMatrix = Camera::GetVPMatrix();
 	Render();
 }
 #pragma endregion
@@ -132,64 +132,8 @@ void ModelEntity::Render() {
 }
 
 void ModelEntity::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
+	VPMatrix = Camera::GetVPMatrix();
 	Render();
-}
-#pragma endregion
-
-#pragma region PLAYER FUNCTION DEFINITIONS
-
-Player::Player() {
-	ObjPos = glm::vec3();
-	ObjScale = glm::vec3(0.05f, 0.05f, -0.05f);
-	ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	ObjVel = { 0.0f, 0.0f, 0.0f };
-	Target = { 0.0f, 0.0f, 0.0f };
-	model = EntityManager::GetModel(PLAYER_ENTITY);
-}
-
-Player::Player(glm::vec3 _Pos) {
-	ObjPos = _Pos;
-	ObjScale = glm::vec3(0.05f, 0.05f, -0.05f);
-	ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	ObjVel = { 0.0f, 0.0f, 0.0f };
-	Target = { 0.0f, 0.0f, 0.0f };
-
-	model = EntityManager::GetModel(PLAYER_ENTITY);
-}
-
-void Player::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
-	Render();
-}
-
-void Player::Render() {
-	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(ObjPos.x, ObjPos.y, ObjPos.z + 30.0f) / 375.0f);
-
-	float PI = 3.14159265359f;
-	float angle;
-	angle = atan2f(ObjVel.x, ObjVel.y) * (180.0f / PI);
-
-	//X Rotation
-	glm::mat4 RotateX =
-		glm::rotate(
-			glm::mat4(),
-			glm::radians(ObjRotation.x + 90.0f),
-			glm::vec3(1.0f, 0.0f, 0.0f)
-		);
-
-	glm::mat4 RotateY =
-		glm::rotate(
-			glm::mat4(),
-			glm::radians(ObjRotation.y + (angle * -1.0f)),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
-
-	glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(ObjScale));
-	ModelMatrix = TranslationMatrix * (RotateX * RotateY) * ScaleMatrix;
-	glUniform3fv(glGetUniformLocation(Shader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
-
-	model->Render(ModelMatrix);
 }
 #pragma endregion
 
@@ -206,7 +150,7 @@ Sphere::Sphere(glm::vec3 _Pos) {
 }
 
 void Sphere::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
+	VPMatrix = Camera::GetVPMatrix();
 	Render();
 }
 #pragma endregion
@@ -265,7 +209,7 @@ Plane::Plane(glm::vec3 _Pos, std::string _TextureName) {
 };
 
 void Plane::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
+	VPMatrix = Camera::GetVPMatrix();
 	glUseProgram(Shader);
 
 	//Binding the array
@@ -342,7 +286,7 @@ Pyramid::Pyramid(glm::vec3 _Pos) {
 };
 
 void Pyramid::Process(float _DeltaTime) {
-	VPMatrix = Camera::GetMatrix();
+	VPMatrix = Camera::GetVPMatrix();
 	glUseProgram(Shader);
 
 	//Binding the array

@@ -31,8 +31,8 @@
 #include <time.h>
 
 namespace UTILS {
-	const int WindowWidth = 750;
-	const int WindowHeight = 750;
+	const int WindowWidth = 1600;
+	const int WindowHeight = 900;
 }
 
 #pragma region SHADER MACROS

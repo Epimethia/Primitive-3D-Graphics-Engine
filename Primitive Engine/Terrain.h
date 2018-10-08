@@ -9,8 +9,8 @@ public:
 	~Terrain();
 
 	void Init();
-
 	void Render();
+	float GetHeight(float x, float y);
 
 private:
 	glm::vec3 ObjScale;
@@ -18,8 +18,23 @@ private:
 	glm::vec3 ObjPos;
 	GLuint VAO, VBO, EBO, Shader, Texture;
 
-	void LoadHeightMap();
-	void GenerateVertBuffer(int _FieldSize, float _Separation);
-	void GenerateIndices(int _GridSize, int &_NumIndices);
-	int numIndices;
+	unsigned int NumIndices;
+	float HeightScale;
+	float Separation;
+	unsigned int GridSize = 513;
+
+	std::vector<GLfloat> PlaneVerts;
+	std::vector<glm::vec3> NormalVals;
+	std::vector<float> HeightMapData;
+
+	void LoadHeightMap(std::string _HeightMapFilePath);
+	void EstimateNormals();
+	void GenerateVertBuffer();
+	void GenerateIndices();
+	void SetUniforms();
+	
+	//Helper functions
+	void Smooth();
+	float Average(unsigned int i, unsigned int j);
+	bool IsInBounds(unsigned int i, unsigned int j);
 };

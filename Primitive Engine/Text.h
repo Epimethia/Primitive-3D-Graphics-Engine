@@ -12,7 +12,7 @@ struct Character {
 class Text {
 public:
 	Text();
-	Text(std::string text, std::string font, glm::vec2 pos, GLuint Shader, int size);
+	Text(std::string text, std::string font, glm::vec2 pos, int size);
 	void SetColor(glm::vec3 _Color) { color = _Color; };
 	void SetScale(GLfloat _Scale) { scale = _Scale; };
 	void SetText(std::string _Text) { text = _Text; };

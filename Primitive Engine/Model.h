@@ -18,7 +18,7 @@ public:
 	// Draws the model, and thus all its meshes
 	void Render(glm::mat4 _TransformMatrix) {
 		for (GLuint i = 0; i < this->meshes.size(); i++) {
-			this->meshes[i].Render(program, Camera::GetMatrix(), _TransformMatrix);
+			this->meshes[i].Render(program, Camera::GetVPMatrix(), _TransformMatrix);
 		}
 	}
 

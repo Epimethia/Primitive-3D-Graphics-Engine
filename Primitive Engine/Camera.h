@@ -8,8 +8,11 @@ public:
 	~Camera();
 	static std::shared_ptr<Camera> GetInstance();
 	static void DestroyInstance();
-	static glm::mat4& GetMatrix();
-	static glm::vec3& GetPos() { return CameraPos; };
+	static glm::mat4 GetVPMatrix();
+	static glm::vec3& GetPos() {
+		return CameraPos; 
+	};
+	static void Process();
 	static int XRot;
 	static int YRot;
 
