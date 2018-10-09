@@ -25,7 +25,7 @@ std::shared_ptr<Camera> Camera::GetInstance() {
 	glm::mat4 RotationMatrixX =
 		glm::rotate(
 			glm::mat4(),
-			glm::radians(-65.0f),
+			glm::radians(-35.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f)
 		);
 
@@ -61,7 +61,7 @@ void Camera::Process(){
 	glm::mat4 RotationMatrixX =
 		glm::rotate(
 			glm::mat4(),
-			glm::radians(-35.0f),
+			glm::radians(-65.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f)
 		);
 

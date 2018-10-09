@@ -131,6 +131,7 @@
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="GeometryModel.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TessModel.cpp" />
     <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +149,7 @@
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="GeometryModel.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Menu.h" />
@@ -156,6 +159,7 @@
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TessModel.h" />
     <ClInclude Include="Text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

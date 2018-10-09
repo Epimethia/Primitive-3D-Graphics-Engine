@@ -31,8 +31,8 @@ std::shared_ptr<EntityManager> EntityManager::EntityManagerPtr = nullptr;
 //Return Type:		None
 //Description:		Entity Manager constructor that generates all the verts on startup
 EntityManager::EntityManager() {
-	ModelShader = SL.CreateProgram(MODEL_VERT_SHADER, MODEL_FRAG_SHADER);
-	ObjectShader = SL.CreateProgram(VERT_SHADER, FRAG_SHADER);
+	ModelShader = ShaderLoader::CreateProgram(MODEL_VERT_SHADER, MODEL_FRAG_SHADER);
+	ObjectShader = ShaderLoader::CreateProgram(VERT_SHADER, FRAG_SHADER);
 
 	GLuint VAO, VBO, EBO, Texture;
 	int width, height;
@@ -60,7 +60,6 @@ EntityManager::EntityManager() {
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
-
 	//Binding and setting buffer data
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(PlaneVerts), PlaneVerts, GL_STATIC_DRAW);

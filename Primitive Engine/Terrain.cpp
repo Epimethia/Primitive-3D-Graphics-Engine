@@ -17,43 +17,18 @@ Terrain::~Terrain(){
 }
 
 void Terrain::Init(){
-	ShaderLoader sl;
-	Shader = sl.CreateProgram(VERT_SHADER, FRAG_SHADER);
+	TerrainShader = ShaderLoader::CreateProgram(VERT_SHADER, FRAG_SHADER);
+	GrassGeomShader = ShaderLoader::CreateProgram("Assets/Shaders/GrassShader.vs", "Assets/Shaders/GrassShader.fs", "Assets/Shaders/GrassShader.gs");
 	ObjPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	ObjScale = glm::vec3(1.0f, 1.0f, 1.0f);
 	ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	glGenVertexArrays(1, &VAO);
+
 	LoadHeightMap("Assets/Height Maps/coastMountain513.raw");
 	Smooth();
 	EstimateNormals();
 	GenerateVertBuffer();
 	GenerateIndices();
-
-	//Enabling the positional floats
-	glVertexAttribPointer(
-		0, 3, 
-		GL_FLOAT, GL_FALSE, 
-		8 * sizeof(GLfloat),
-		(GLvoid*) 0);
-	glEnableVertexAttribArray(0);
-
-	//Enabling Normal Floats
-	glVertexAttribPointer(
-		1, 3,
-		GL_FLOAT, GL_FALSE,
-		8 * sizeof(GLfloat),
-		(GLvoid*) (3 * sizeof(GLfloat))
-	);
-	glEnableVertexAttribArray(1);
-
-	//Enabling tex coords Floats
-	glVertexAttribPointer(
-		2, 2, 
-		GL_FLOAT, GL_FALSE, 
-		8 * sizeof(GLfloat),
-		(GLvoid*) (6 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
 
 	//Generating and binding textures
 	glGenTextures(1, &Texture);
@@ -99,10 +74,12 @@ void Terrain::Init(){
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GenerateGrassBuffers();
 }
 
 void Terrain::Render(){
-	glUseProgram(Shader);
+	glUseProgram(TerrainShader);
 
 	//Binding the array
 	glBindVertexArray(VAO);
@@ -116,7 +93,7 @@ void Terrain::Render(){
 	glBindTexture(GL_TEXTURE_2D, Texture);
 
 	//Sending the texture to the GPU via uniform
-	glUniform1i(glGetUniformLocation(Shader, "tex"), 0);
+	glUniform1i(glGetUniformLocation(TerrainShader, "tex"), 0);
 
 	SetUniforms();
 	//Drawing the entity
@@ -125,11 +102,11 @@ void Terrain::Render(){
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
@@ -194,10 +171,10 @@ void Terrain::SetUniforms(){
 
 	glm::mat4 MVP = Camera::GetVPMatrix() * ModelMatrix;
 
-	glUniformMatrix4fv(glGetUniformLocation(Shader, "VP"), 1, GL_FALSE, glm::value_ptr(Camera::GetVPMatrix()));
-	glUniformMatrix4fv(glGetUniformLocation(Shader, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix4fv(glGetUniformLocation(Shader, "model"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
-	glUniform3fv(glGetUniformLocation(Shader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
+	glUniformMatrix4fv(glGetUniformLocation(TerrainShader, "VP"), 1, GL_FALSE, glm::value_ptr(Camera::GetVPMatrix()));
+	glUniformMatrix4fv(glGetUniformLocation(TerrainShader, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix4fv(glGetUniformLocation(TerrainShader, "model"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+	glUniform3fv(glGetUniformLocation(TerrainShader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
 }
 
 void Terrain::GenerateVertBuffer(){
@@ -223,12 +200,38 @@ void Terrain::GenerateVertBuffer(){
 
 		}
 	}
-
+	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 	//Binding and setting buffer data
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, PlaneVerts.size() * sizeof(GLfloat), &PlaneVerts[0], GL_STATIC_DRAW);
+	
+	//Enabling the positional floats
+	glVertexAttribPointer(
+		0, 3,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) 0);
+	glEnableVertexAttribArray(0);
+
+	//Enabling Normal Floats
+	glVertexAttribPointer(
+		1, 3,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) (3 * sizeof(GLfloat))
+	);
+	glEnableVertexAttribArray(1);
+
+	//Enabling tex coords Floats
+	glVertexAttribPointer(
+		2, 2,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) (6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
 }
 
 void Terrain::GenerateIndices(){
@@ -254,6 +257,8 @@ void Terrain::GenerateIndices(){
 	//Generating EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, PlaneIndices.size() * sizeof(GLuint), &PlaneIndices[0], GL_STATIC_DRAW);
+
+
 }
 
 void Terrain::LoadHeightMap(std::string _HeightMapFilePath){
@@ -349,4 +354,66 @@ bool Terrain::IsInBounds(unsigned int i, unsigned int j) {
 	return
 		i >= 0 && i < GridSize &&
 		j >= 0 && j < GridSize;
+}
+
+void Terrain::GenerateGrassBuffers(){
+	glGenVertexArrays(1, &grassVAO);
+	glBindVertexArray(grassVAO);
+	//Binding and setting buffer data
+	glGenBuffers(1, &grassVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, PlaneVerts.size() * sizeof(GLfloat), &PlaneVerts[0], GL_STATIC_DRAW);
+
+	//Enabling the positional floats
+	glVertexAttribPointer(
+		0, 3,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) 0);
+	glEnableVertexAttribArray(0);
+
+	//Enabling Normal Floats
+	glVertexAttribPointer(
+		1, 3,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) (3 * sizeof(GLfloat))
+	);
+	glEnableVertexAttribArray(1);
+
+	//Enabling tex coords Floats
+	glVertexAttribPointer(
+		2, 2,
+		GL_FLOAT, GL_FALSE,
+		8 * sizeof(GLfloat),
+		(GLvoid*) (6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Terrain::RenderGrass() {
+	glUseProgram(GrassGeomShader);
+
+	//Binding the array
+	glBindVertexArray(grassVAO);
+
+	//Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Setting and binding the correct texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+
+	//Sending the texture to the GPU via uniform
+	glUniform1i(glGetUniformLocation(GrassGeomShader, "tex"), 0);
+
+	SetUniforms();
+
+	glDrawArrays(GL_POINTS, 0, GridSize*GridSize);
+
+	//Clearing the vertex array
+	glBindVertexArray(0);
 }

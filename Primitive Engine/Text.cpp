@@ -7,13 +7,12 @@
 
 Text::Text() {};      
 
-Text::Text(std::string newText, std::string newFont, glm::vec2 pos, int size) {
+Text::Text(std::string newText, std::string newFont, glm::vec2 pos, float size) {
 	text = newText;
-	color = glm::vec3(1.0, 1.0, 1.0);
-	scale = 1.0;
+	color = glm::vec3(1.0f, 1.0f, 1.0f);
+	scale = static_cast<GLfloat>(size);
 	position = pos;
-	ShaderLoader sl;
-	TextShaderProg = sl.CreateProgram("Assets/Shaders/Text.vs", "Assets/Shaders/Text.fs");
+	TextShaderProg = ShaderLoader::CreateProgram("Assets/Shaders/Text.vs", "Assets/Shaders/Text.fs");
 
 	// Initiate the font Lib
 	FT_Library ft;

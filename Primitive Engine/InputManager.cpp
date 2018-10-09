@@ -10,7 +10,6 @@ InputManager::InputManager() {
 }
 
 void InputManager::ProcessKeyInput(float _dt) {
-	float MoveSpeed = 1.0f;
 	glutSpecialFunc(InputManager::SpecialKeyDown);
 	glutSpecialUpFunc(InputManager::SpecialKeyUp);
 	glutKeyboardFunc(InputManager::NormKeyDown);

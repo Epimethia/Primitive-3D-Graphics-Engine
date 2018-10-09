@@ -11,12 +11,16 @@ public:
 	void Init();
 	void Render();
 	float GetHeight(float x, float y);
+	void GenerateGrassBuffers();
+	void RenderGrass();
 
 private:
 	glm::vec3 ObjScale;
 	glm::vec3 ObjRotation;
 	glm::vec3 ObjPos;
-	GLuint VAO, VBO, EBO, Shader, Texture;
+	GLuint VAO, VBO, EBO, Texture;
+	GLuint grassVAO, grassVBO;
+	GLuint TerrainShader, GrassGeomShader;
 
 	unsigned int NumIndices;
 	float HeightScale;
@@ -37,4 +41,5 @@ private:
 	void Smooth();
 	float Average(unsigned int i, unsigned int j);
 	bool IsInBounds(unsigned int i, unsigned int j);
+
 };

@@ -127,7 +127,7 @@ CubeMap::CubeMap() {
 	}
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-	Shader = sl.CreateProgram(CUBEMAP_VERT_SHADER, CUBEMAP_FRAG_SHADER);
+	ShaderLoader::CreateProgram(CUBEMAP_VERT_SHADER, CUBEMAP_FRAG_SHADER);
 };
 
 void CubeMap::Render() {

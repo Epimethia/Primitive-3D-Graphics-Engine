@@ -61,6 +61,4 @@ private:
 
 	static std::shared_ptr<Model> Player_Model;
 	static std::shared_ptr<Model> Player_Stencil_Model;
-
-	ShaderLoader SL;
 };

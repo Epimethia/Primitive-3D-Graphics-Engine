@@ -14,6 +14,4 @@ private:
 	GLuint VAO;
 	GLuint Texture;
 	GLuint Shader;
-
-	ShaderLoader sl;
 };

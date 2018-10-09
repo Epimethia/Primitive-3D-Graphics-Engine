@@ -66,6 +66,12 @@
     <ClCompile Include="GeometryModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TessModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -111,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="GeometryModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TessModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
