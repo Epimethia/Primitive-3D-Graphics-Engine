@@ -54,9 +54,9 @@ void GeometryModel::Render(){
 	GLint vpLoc = glGetUniformLocation(Shader, "mvp");
 	glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 	glBindVertexArray(VAO);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawArrays(GL_POINTS, 0, 1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glBindVertexArray(0);
 }

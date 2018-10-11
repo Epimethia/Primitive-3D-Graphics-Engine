@@ -18,6 +18,7 @@ Terrain* t = new Terrain;
 PlayerObject* p = new PlayerObject;
 Text* tx0;
 Text* tx1;
+Text* tx2;
 GeometryModel* gm = new GeometryModel;
 TessModel* tm = new TessModel;
 FrameBuffer* fb = new FrameBuffer;
@@ -41,8 +42,10 @@ void Initialize() {
 	p->Init(glm::vec3(0.7f, 1.0f, 0.0f));
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
+	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
+
 	tm->Init();
-	tm->Pos = glm::vec3(0.9f, 1.3f, t->GetHeight(0.9f, 1.3f));
+	tm->Pos = glm::vec3(0.9f, 1.3f, t->GetHeight(0.9f, 1.3f) + 0.1f);
 	gm->Init(glm::vec3(0.0f, 400.0f, 400.0f));
 	fb->Init();
 }
@@ -55,12 +58,10 @@ void Render(void) {
 
 	//RENDER ITEMS HERE//
 	fb->BeginCapture();
-
-
 	t->Render();
-	t->RenderGrass();
 	tx0->Render();
 	tx1->Render();
+	tx2->Render();
 	gm->Render();
 	tm->Render();
 	p->Render();
@@ -137,41 +138,43 @@ int main(int argc, char **argv) {
 }
 
 void ProcessInput(){
-	if (p->ObjPos.x > 2.55f){
-		p->ObjPos.x = 2.55f;
-		return;
-	}
-	if (p->ObjPos.x < -2.55f){
-		p->ObjPos.x = -2.55f;
-		return;
-	}
-	if (p->ObjPos.y > 2.55f){
-		p->ObjPos.y = 2.55f;
-		return;
-	}
-	if (p->ObjPos.y < -2.55f){
-		p->ObjPos.y = -2.55f;
-		return;
-	}
+
 
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y += 0.1f * g_DeltaTime, p->ObjPos.z );
+		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y += 1.1f * g_DeltaTime, p->ObjPos.z );
 	}
 	if (InputManager::KeyArray['s'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y -= 0.1f * g_DeltaTime, p->ObjPos.z);
+		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y -= 1.1f * g_DeltaTime, p->ObjPos.z);
 	}
 	if (InputManager::KeyArray['a'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x -= 0.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z);
+		p->ObjPos = glm::vec3(p->ObjPos.x -= 1.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z);
 	}
 	if (InputManager::KeyArray['d'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x += 0.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z );
+		p->ObjPos = glm::vec3(p->ObjPos.x += 1.0f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z );
 	}
-	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS){
+	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();
 	}
+	if (InputManager::KeyArray['g'] == KEY_FIRST_PRESS) {
+		t->ToggleGrass();
+	}
+
+	if (p->ObjPos.x > 2.54f) {
+		p->ObjPos.x = 2.54f;
+	}
+	if (p->ObjPos.x < -2.54f) {
+		p->ObjPos.x = -2.54f;
+	}
+	if (p->ObjPos.y > 2.54f) {
+		p->ObjPos.y = 2.54f;
+	}
+	if (p->ObjPos.y < -2.54f) {
+		p->ObjPos.y = -2.54f;
+	}
+
 	gm->Pos = p->ObjPos;
 	gm->Pos.z += 0.1f;
-	p->ObjPos.z = t->GetHeight(p->ObjPos.x, p->ObjPos.y) + 0.01f;
+	p->ObjPos.z = t->GetHeight(p->ObjPos.x, p->ObjPos.y) + 0.04f;
 	Camera::GetPos() = -glm::vec3(p->ObjPos.x, p->ObjPos.y + 1.6f, p->ObjPos.z - 0.7f);
 	InputManager::ProcessKeyInput(g_DeltaTime);
 }

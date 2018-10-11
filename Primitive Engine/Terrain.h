@@ -13,14 +13,18 @@ public:
 	float GetHeight(float x, float y);
 	void GenerateGrassBuffers();
 	void RenderGrass();
+	void ToggleGrass();
 
 private:
 	glm::vec3 ObjScale;
 	glm::vec3 ObjRotation;
 	glm::vec3 ObjPos;
-	GLuint VAO, VBO, EBO, Texture;
+	GLuint VAO, VBO, EBO;
+	GLuint TerrainTexture, GrassTexture;
 	GLuint grassVAO, grassVBO;
-	GLuint TerrainShader, GrassGeomShader;
+	GLuint TerrainShader, GrassGeomShader, GrassQuadGeomShader;
+
+	int CurrentGrassMode;
 
 	unsigned int NumIndices;
 	float HeightScale;
@@ -36,6 +40,7 @@ private:
 	void GenerateVertBuffer();
 	void GenerateIndices();
 	void SetUniforms();
+	void GenerateTextures();
 	
 	//Helper functions
 	void Smooth();

@@ -17,7 +17,7 @@ void PlayerObject::Init(glm::vec3 _Pos){
 }
 
 void PlayerObject::Process(float _gDeltaTime){
-	//Camera::GetPos() = glm::vec3(ObjPos.x, ObjPos.y, ObjPos.z + 1.0f);
+
 }
 
 void PlayerObject::Render(){

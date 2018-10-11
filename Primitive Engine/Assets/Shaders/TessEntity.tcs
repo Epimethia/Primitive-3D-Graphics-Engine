@@ -7,7 +7,7 @@ uniform float dist;
 
 void main() {
 
-    if (dist <= 0.4f) {
+    if (dist < 0.4f) {
         if (gl_InvocationID == 0) {
             gl_TessLevelInner[0] = 3.0;
             gl_TessLevelInner[1] = 3.0;
@@ -18,10 +18,10 @@ void main() {
         }
     }
 
-    else if (dist <= 0.8f) {
+    else if (dist < 0.8f) {
         if (gl_InvocationID == 0) {
-            gl_TessLevelInner[0] = 1.0;
-            gl_TessLevelInner[1] = 1.0;
+            gl_TessLevelInner[0] = 3.0;
+            gl_TessLevelInner[1] = 3.0;
             gl_TessLevelOuter[0] = 3.0;
             gl_TessLevelOuter[1] = 3.0;
             gl_TessLevelOuter[2] = 3.0;

@@ -28,13 +28,6 @@ void TessModel::Init(){
 	};
 	glPatchParameteri(GL_PATCH_VERTICES, 4);
 
-	//for tripatch
-	//	GLfloat points[] = {
-	//		1.0f, -1.0f, 0.0f,
-	//		1.0f, 1.0f, 0.0f,
-	//		-1.0, 1.0, 0.0f
-	//	};
-	//glPatchParameteri(GL_PATCH_VERTICES, 3);
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -56,7 +49,7 @@ void TessModel::Init(){
 
 void TessModel::Render(){
 	glUseProgram(Shader);
-	glm::mat4 model = glm::translate(glm::mat4(), Pos) * glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *glm::scale(glm::mat4(), glm::vec3(0.1f, 0.1f, 0.1f));
+	glm::mat4 model = glm::translate(glm::mat4(), Pos) * glm::rotate(glm::mat4(), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(), glm::vec3(0.1f, 0.1f, 0.1f));
 	glm::mat4 mvp = Camera::GetVPMatrix() *	model;
 	glUniformMatrix4fv(glGetUniformLocation(Shader, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
 
@@ -64,12 +57,11 @@ void TessModel::Render(){
 	glm::vec3 camPos =
 		glm::vec3(
 			-Camera::GetPos().x,
-			-Camera::GetPos().y - 1.0f,
-			-Camera::GetPos().z + 1.3f
+			-Camera::GetPos().y - 1.6f,
+			-Camera::GetPos().z + 0.7f
 		);
 
-	float dist = glm::distance(camPos, Pos);
-	//std::cout << dist << std::endl;
+	float dist = glm::length(camPos - Pos);
 	glUniform1f(glGetUniformLocation(Shader, "dist"), dist);
 
 	glBindVertexArray(VAO);

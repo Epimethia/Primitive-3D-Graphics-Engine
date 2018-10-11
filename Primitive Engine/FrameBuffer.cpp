@@ -14,10 +14,10 @@ FrameBuffer::~FrameBuffer(){
 void FrameBuffer::Init(){
 	
 	GLfloat BufferVerts[] = {
-		-1.0f, 1.0f, 0.0f,		0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f,		1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f,		1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,
+		-1.01f, 1.01f, 0.0f,		0.0f, 1.0f,
+		1.01f, 1.01f, 0.0f,			1.0f, 1.0f,
+		1.01f, -1.01f, 0.0f,		1.0f, 0.0f,
+		-1.01f, -1.01f, 0.0f,		0.0f, 0.0f,
 	};
 
 	//Defining Cube Indices

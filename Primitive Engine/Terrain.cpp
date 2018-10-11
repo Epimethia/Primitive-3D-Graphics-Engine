@@ -10,6 +10,7 @@ Terrain::Terrain(){
 	PlaneVerts = std::vector<GLfloat>(GridSize * GridSize * 8);
 	NormalVals = std::vector<glm::vec3>(GridSize * GridSize * 8);
 	Separation = (1.0f / 100.0f);
+	CurrentGrassMode = 0;
 }
 
 Terrain::~Terrain(){
@@ -19,6 +20,7 @@ Terrain::~Terrain(){
 void Terrain::Init(){
 	TerrainShader = ShaderLoader::CreateProgram(VERT_SHADER, FRAG_SHADER);
 	GrassGeomShader = ShaderLoader::CreateProgram("Assets/Shaders/GrassShader.vs", "Assets/Shaders/GrassShader.fs", "Assets/Shaders/GrassShader.gs");
+	GrassQuadGeomShader = ShaderLoader::CreateProgram("Assets/Shaders/GrassShader.vs", "Assets/Shaders/GrassShader - Quads.fs", "Assets/Shaders/GrassShader - Quads.gs");
 	ObjPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	ObjScale = glm::vec3(1.0f, 1.0f, 1.0f);
 	ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -30,51 +32,7 @@ void Terrain::Init(){
 	GenerateVertBuffer();
 	GenerateIndices();
 
-	//Generating and binding textures
-	glGenTextures(1, &Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
-
-	int width, height;
-	//Getting the image from filepath
-	unsigned char* image = SOIL_load_image(
-		"Assets/Sprite/Wireframe.png",
-		&width,
-		&height,
-		0,
-		SOIL_LOAD_RGBA
-	);
-
-	//Generating the texture from image data
-	glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		GL_RGBA,
-		width, height,
-		0,
-		GL_RGBA,
-		GL_UNSIGNED_BYTE,
-		image
-	);
-
-	//Generating mipmaps
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	//Setting Texture wrap
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	//Setting texture filters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//Freeing up data
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	GenerateTextures();
 	GenerateGrassBuffers();
 }
 
@@ -90,7 +48,7 @@ void Terrain::Render(){
 
 	//Setting and binding the correct texture
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glBindTexture(GL_TEXTURE_2D, TerrainTexture);
 
 	//Sending the texture to the GPU via uniform
 	glUniform1i(glGetUniformLocation(TerrainShader, "tex"), 0);
@@ -102,16 +60,16 @@ void Terrain::Render(){
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	//Clearing the vertex array
 	glBindVertexArray(0);
+	RenderGrass();
+
 	return;
 }
 
@@ -175,6 +133,104 @@ void Terrain::SetUniforms(){
 	glUniformMatrix4fv(glGetUniformLocation(TerrainShader, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
 	glUniformMatrix4fv(glGetUniformLocation(TerrainShader, "model"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 	glUniform3fv(glGetUniformLocation(TerrainShader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
+}
+
+void Terrain::GenerateTextures() {
+
+	#pragma region TerrainTexture
+	//Generating and binding textures
+	glGenTextures(1, &TerrainTexture);
+	glBindTexture(GL_TEXTURE_2D, TerrainTexture);
+
+	int width, height;
+	//Getting the image from filepath
+	unsigned char* image = SOIL_load_image(
+		"Assets/Sprite/Wireframe.png",
+		&width,
+		&height,
+		0,
+		SOIL_LOAD_RGBA
+	);
+
+	//Generating the texture from image data
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		GL_RGBA,
+		width, height,
+		0,
+		GL_RGBA,
+		GL_UNSIGNED_BYTE,
+		image
+	);
+
+	//Generating mipmaps
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	//Setting Texture wrap
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	//Setting texture filters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	//Freeing up data
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+#pragma endregion
+
+	#pragma region GrassQuadTexture
+	//Generating and binding textures
+	glGenTextures(1, &GrassTexture);
+	glBindTexture(GL_TEXTURE_2D, GrassTexture);
+
+	//Getting the image from filepath
+	image = SOIL_load_image(
+		"Assets/Sprite/grassTex.png",
+		&width,
+		&height,
+		0,
+		SOIL_LOAD_RGBA
+	);
+
+	//Generating the texture from image data
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		GL_RGBA,
+		width, height,
+		0,
+		GL_RGBA,
+		GL_UNSIGNED_BYTE,
+		image
+	);
+
+	//Generating mipmaps
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	//Setting Texture wrap
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	//Setting texture filters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	//Freeing up data
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	#pragma endregion
+
 }
 
 void Terrain::GenerateVertBuffer(){
@@ -394,7 +450,18 @@ void Terrain::GenerateGrassBuffers(){
 }
 
 void Terrain::RenderGrass() {
-	glUseProgram(GrassGeomShader);
+	GLuint CurrentShader;
+	if (CurrentGrassMode == 0) {
+		CurrentShader = GrassQuadGeomShader;
+	}
+	else if (CurrentGrassMode == 1) {
+		CurrentShader = GrassGeomShader;
+	}
+	else {
+		return;
+	}
+
+	glUseProgram(CurrentShader);
 
 	//Binding the array
 	glBindVertexArray(grassVAO);
@@ -403,17 +470,23 @@ void Terrain::RenderGrass() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	SetUniforms();
 	//Setting and binding the correct texture
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glBindTexture(GL_TEXTURE_2D, GrassTexture);
 
 	//Sending the texture to the GPU via uniform
-	glUniform1i(glGetUniformLocation(GrassGeomShader, "tex"), 0);
+	glUniform1i(glGetUniformLocation(CurrentShader, "tex"), 0);
 
-	SetUniforms();
 
 	glDrawArrays(GL_POINTS, 0, GridSize*GridSize);
 
 	//Clearing the vertex array
 	glBindVertexArray(0);
+}
+
+void Terrain::ToggleGrass() {
+	(CurrentGrassMode >= 2)
+		? CurrentGrassMode = 0
+		: CurrentGrassMode++;
 }

@@ -16,11 +16,13 @@ float rand(vec2 co){
 
 void main() {
     outColor = gs_in[0].color;
+
+    //Generating grass blades
     for (int i = -1; i < 2; i++) {
         vec4 pos = gs_in[0].position;
         pos.x += i * 0.03f;
         pos.z -= 0.7f;
-       gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
+        gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();
@@ -36,7 +38,7 @@ void main() {
         pos.x += i * 0.05f;
         pos.y -= 0.05f;
         pos.z -= 0.7f;
-       gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
+    gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();
