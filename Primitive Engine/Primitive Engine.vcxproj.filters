@@ -5,22 +5,57 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Engine">
+    <Filter Include="Engine">
       <UniqueIdentifier>{13ea92fc-5fbc-46fd-b813-0a041ebb1f9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Engine\Headers">
-      <UniqueIdentifier>{91a54166-f769-47e9-9ebd-ccd57d37fa77}</UniqueIdentifier>
+    <Filter Include="Engine\Camera">
+      <UniqueIdentifier>{84dc8883-8ddf-44b3-ad43-da87b6012a40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Engine\Implimentation">
-      <UniqueIdentifier>{3ee35b89-b93d-4cbe-88b8-8fa3975990b1}</UniqueIdentifier>
+    <Filter Include="Engine\Clock">
+      <UniqueIdentifier>{ca7d8028-805c-4ba9-8091-6f7705df24a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\CubeMap">
+      <UniqueIdentifier>{787eeb86-64e2-499c-9dee-597a5055ebcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Entity">
+      <UniqueIdentifier>{67b8818a-e867-499d-b092-9a215552bde6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\FrameBuffer">
+      <UniqueIdentifier>{d5a5171d-fc38-45a3-b046-cccf2111d242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\InputManager">
+      <UniqueIdentifier>{73dc2c0a-dc0c-4e31-8326-917f748e2b9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\TextLabel">
+      <UniqueIdentifier>{29435920-09a7-40bb-a8e9-4c3d3a1de750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\SoundManager">
+      <UniqueIdentifier>{8a7ece30-3e56-4fab-837e-a1ab2a06c0c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ShaderLoader">
+      <UniqueIdentifier>{8a12a01f-bc26-4b95-9683-dc4ed8e57687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Terrain">
+      <UniqueIdentifier>{7891b70d-420d-4f7d-8797-6e4f40f719a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{8fa1ed35-24f8-40f9-89da-1e021e922dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other\TessModel">
+      <UniqueIdentifier>{a07ec62e-4f2d-4edb-8ee4-8c9d7d90d9f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other\Menu">
+      <UniqueIdentifier>{4f683b57-190f-4034-a502-97c82ef42aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other\GeometryModel">
+      <UniqueIdentifier>{c69cafb8-5b84-48f0-adad-6fc8316c8e44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other\PlayerObject">
+      <UniqueIdentifier>{bfcd4915-e4c6-4e68-baf5-9e79c3670166}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,101 +63,107 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
+      <Filter>Engine\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
+      <Filter>Engine\Clock</Filter>
     </ClCompile>
     <ClCompile Include="CubeMap.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
+      <Filter>Engine\CubeMap</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
+      <Filter>Engine\Entity</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderLoader.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Header Files\Engine\Implimentation</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TessModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Entity</Filter>
     </ClCompile>
     <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Engine\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Engine\TextLabel</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Engine\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Other\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Engine\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Engine\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TessModel.cpp">
+      <Filter>Other\TessModel</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryModel.cpp">
+      <Filter>Other\GeometryModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject.cpp">
+      <Filter>Other\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ClothParticle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\Engine\Headers</Filter>
+      <Filter>Engine\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Clock.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CubeMap.h">
-      <Filter>Header Files\Engine\Headers</Filter>
+      <Filter>Engine\Clock</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files\Engine\Headers</Filter>
+      <Filter>Engine\Entity</Filter>
     </ClInclude>
     <ClInclude Include="EntityManager.h">
-      <Filter>Header Files\Engine\Headers</Filter>
+      <Filter>Engine\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderLoader.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files\Engine\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerObject.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryModel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TessModel.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="CubeMap.h">
+      <Filter>Engine\CubeMap</Filter>
     </ClInclude>
     <ClInclude Include="FrameBuffer.h">
+      <Filter>Engine\FrameBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Engine\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Engine\TextLabel</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Engine\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Other\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Engine\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Engine\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Engine\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TessModel.h">
+      <Filter>Other\TessModel</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryModel.h">
+      <Filter>Other\GeometryModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>Other\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ClothParticle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

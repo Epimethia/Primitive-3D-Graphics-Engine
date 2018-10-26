@@ -254,7 +254,7 @@ EntityManager::EntityManager() {
 
 	#pragma region GENERATING SPHERE MESH
 	std::cout << "Generating Sphere Mesh\n";
-#pragma region Generating VAO
+	#pragma region Generating VAO
 	float radius = 1.0f;
 	const int sections = 16;
 	const int vertexAttrib = 8;

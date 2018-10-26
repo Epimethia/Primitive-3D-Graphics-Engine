@@ -4,24 +4,22 @@
 #include "Clock.h"
 #include "InputManager.h"
 #include "Terrain.h"
-#include "PlayerObject.h"
-#include "GeometryModel.h"
-#include "TessModel.h"
 #include "FrameBuffer.h"
 #include "Text.h"
+
+#include "ClothParticle.h"
 
 #include "libs/glm/gtx/string_cast.hpp"
 
 float g_DeltaTime = 0.0f;
 
 Terrain* t = new Terrain;
-PlayerObject* p = new PlayerObject;
 Text* tx0;
 Text* tx1;
 Text* tx2;
-GeometryModel* gm = new GeometryModel;
-TessModel* tm = new TessModel;
 FrameBuffer* fb = new FrameBuffer;
+
+ClothParticle* cp;
 
 void ProcessInput();
 
@@ -36,17 +34,13 @@ void Initialize() {
 	glFrontFace(GL_CW);
 	glEnable(GL_MULTISAMPLE);
 	EntityManager::GetInstance();
-	Camera::GetInstance();
+	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, -1.0f);
 	InputManager::Init();
 	t->Init();
-	p->Init(glm::vec3(0.7f, 1.0f, 0.0f));
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
 	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
-
-	tm->Init();
-	tm->Pos = glm::vec3(0.9f, 1.3f, t->GetHeight(0.9f, 1.3f) + 0.1f);
-	gm->Init(glm::vec3(0.0f, 400.0f, 400.0f));
+	cp = new ClothParticle(glm::vec3(0.0f, 0.0f, -1.0f));
 	fb->Init();
 }
 
@@ -58,14 +52,12 @@ void Render(void) {
 
 	//RENDER ITEMS HERE//
 	fb->BeginCapture();
-	t->Render();
+	//t->Render();
 	tx0->Render();
 	tx1->Render();
 	tx2->Render();
-	gm->Render();
-	tm->Render();
-	p->Render();
 	fb->Render();
+	cp->Render();
 	//-----------------//
 
 	glutSwapBuffers();
@@ -77,15 +69,13 @@ void Render(void) {
 /*pass in DeltaTime (as updates to the g_DeltaTime are called at the start*/
 /*of this loop.															  */
 void Process(void) {
-	g_DeltaTime = Clock::GetDeltaTime();
+	g_DeltaTime = Clock::ProcessClock();
 
 	//DO LOGIC PROCESSING HERE//
 	//Use g_DeltaTime if possible
 	ProcessInput();
-	p->Process(g_DeltaTime);
 	fb->dt += g_DeltaTime / 2.0f;
 	Camera::Process();
-
 	//------------------------//
 	glutPostRedisplay();
 }
@@ -139,18 +129,24 @@ int main(int argc, char **argv) {
 
 void ProcessInput(){
 
-
+	auto CameraPos = &Camera::GetPos();
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y += 1.1f * g_DeltaTime, p->ObjPos.z );
+		CameraPos->y -= 1.1f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['s'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x, p->ObjPos.y -= 1.1f * g_DeltaTime, p->ObjPos.z);
+	if (InputManager::KeyArray['s'] == KEY_HELD) {
+		CameraPos->y += 1.1f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['a'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x -= 1.1f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z);
+	if (InputManager::KeyArray['a'] == KEY_HELD) {
+		CameraPos->x += 1.1f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['d'] == KEY_HELD){
-		p->ObjPos = glm::vec3(p->ObjPos.x += 1.0f * g_DeltaTime, p->ObjPos.y, p->ObjPos.z );
+	if (InputManager::KeyArray['d'] == KEY_HELD) {
+		CameraPos->x -= 1.0f * g_DeltaTime;
+	}
+	if (InputManager::KeyArray[32] == KEY_HELD) {
+		CameraPos->z -= 1.0f * g_DeltaTime;
+	}
+	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
+		CameraPos->z += 1.0f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();
@@ -159,23 +155,19 @@ void ProcessInput(){
 		t->ToggleGrass();
 	}
 
-	if (p->ObjPos.x > 2.54f) {
-		p->ObjPos.x = 2.54f;
+	if (CameraPos->x > 2.54f) {
+		CameraPos->x = 2.54f;
 	}
-	if (p->ObjPos.x < -2.54f) {
-		p->ObjPos.x = -2.54f;
+	if (CameraPos->x < -2.54f) {
+		CameraPos->x = -2.54f;
 	}
-	if (p->ObjPos.y > 2.54f) {
-		p->ObjPos.y = 2.54f;
+	if (CameraPos->y > 2.54f) {
+		CameraPos->y = 2.54f;
 	}
-	if (p->ObjPos.y < -2.54f) {
-		p->ObjPos.y = -2.54f;
+	if (CameraPos->y < -2.54f) {
+		CameraPos->y = -2.54f;
 	}
 
-	gm->Pos = p->ObjPos;
-	gm->Pos.z += 0.1f;
-	p->ObjPos.z = t->GetHeight(p->ObjPos.x, p->ObjPos.y) + 0.04f;
-	Camera::GetPos() = -glm::vec3(p->ObjPos.x, p->ObjPos.y + 1.6f, p->ObjPos.z - 0.7f);
 	InputManager::ProcessKeyInput(g_DeltaTime);
 }
 
