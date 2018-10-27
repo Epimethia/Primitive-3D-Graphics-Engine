@@ -5,13 +5,35 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{9da8b135-39ef-4e63-be9f-887d9eb42640}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Engine\Entities">
+      <UniqueIdentifier>{4e2d3a3c-c609-4280-bfcd-bb51e863a466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\CubeMap">
+      <UniqueIdentifier>{ca650ca8-891b-4b03-8f28-7a04c79a63f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Clock">
+      <UniqueIdentifier>{2e8bcb9d-f6a9-4ae0-ac17-29a58e347bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Camera">
+      <UniqueIdentifier>{941d7773-a63a-42e8-b15c-6e7e19296329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\InputManager">
+      <UniqueIdentifier>{af3c1190-cc0b-449e-af2d-b4e653ba8584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{d9867e2a-331c-4786-b6d3-df71696d3372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ShaderLoader">
+      <UniqueIdentifier>{f73fb037-a020-46db-b57f-9b9b1bada5fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\SoundManager">
+      <UniqueIdentifier>{758b8e7c-cdcd-46b6-aea8-7b4d7790a468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\TextLabel">
+      <UniqueIdentifier>{5bdd3b5f-3b5a-46d2-9e7f-70ac2264063d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,72 +41,69 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Clock</Filter>
     </ClCompile>
     <ClCompile Include="CubeMap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\CubeMap</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Entities</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\Entities</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\InputManager</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Menu</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\ShaderLoader</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine\TextLabel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Clock.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\Clock</Filter>
     </ClInclude>
     <ClInclude Include="CubeMap.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\CubeMap</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\Entities</Filter>
     </ClInclude>
     <ClInclude Include="EntityManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\Entities</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\InputManager</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Menu</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\ShaderLoader</Filter>
     </ClInclude>
     <ClInclude Include="SoundManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Engine\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>Header Files</Filter>
+      <Filter>Engine\TextLabel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
