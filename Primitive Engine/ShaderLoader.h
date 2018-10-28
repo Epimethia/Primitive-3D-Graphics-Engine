@@ -6,15 +6,29 @@
 class ShaderLoader {
 private:
 
-	std::string ReadShader(std::string filename);
-	GLuint CreateShader(GLenum shaderType,
+	static std::string ReadShader(std::string filename);
+	static GLuint CreateShader(GLenum shaderType,
 		std::string source,
 		std::string shaderName);
 
 public:
 	ShaderLoader();
 	~ShaderLoader();
-	GLuint CreateProgram(std::string VertexShaderFilename, std::string FragmentShaderFilename);
+	static GLuint CreateProgram(
+		std::string VertexShaderFilename, 
+		std::string FragmentShaderFilename
+	);
 
-	std::map<std::string, GLuint> Shaders;
+	static GLuint CreateProgram(
+		std::string vertexShaderFilename, 
+		std::string fragmentShaderFilename, 
+		std::string geometryShaderFilename
+	);
+
+	static GLuint CreateProgram(
+		std::string vertexShaderFilename, 
+		std::string fragmentShaderFilename, 
+		std::string tessControlShaderFilename,
+		std::string tessEvalShaderFilename
+	);
 };

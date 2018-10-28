@@ -23,16 +23,11 @@ enum ENTITY_ATTRIBUTE {
 	
 	//Entity Type
 	PLAYER_ENTITY,
-	BULLET_ENTITY,
-	SEEK_ENEMY,
-	WANDER_ENEMY,
+	PLAYER_STENCIL,
+	SPHERE_ENTITY,
 	CUBEMAP_ENTITY,
-
-	//Player State
-	ATTACK_POWERUP,
-	SPEED_POWERUP,
-	DEAD,
-	NONE
+	PLANE_ENTITY,
+	PYRAMID_ENTITY
 };
 
 struct Mesh {
@@ -60,11 +55,10 @@ private:
 	static GLuint ModelShader;
 	static GLuint TextShader;
 
-	static std::shared_ptr<Mesh> Cube_Mesh;
+	static std::shared_ptr<Mesh> Plane_Mesh;
 	static std::shared_ptr<Mesh> Pyramid_Mesh;
 	static std::shared_ptr<Mesh> Sphere_Mesh;
 
 	static std::shared_ptr<Model> Player_Model;
-
-	ShaderLoader SL;
+	static std::shared_ptr<Model> Player_Stencil_Model;
 };

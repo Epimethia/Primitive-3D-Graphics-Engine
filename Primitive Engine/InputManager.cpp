@@ -1,13 +1,11 @@
 #include "InputManager.h"
+#include "Camera.h"
 
 unsigned char InputManager::KeyArray[255];
 unsigned char InputManager::KeySpecialArray[255];
 
 InputManager::InputManager() {
-	for (int i = 0; i < 255; ++i) {
-		KeyArray[i] = KEY_RELEASED;
-		KeySpecialArray[i] = KEY_RELEASED;
-	}
+
 }
 
 void InputManager::ProcessKeyInput() {
@@ -15,39 +13,21 @@ void InputManager::ProcessKeyInput() {
 	glutSpecialUpFunc(InputManager::SpecialKeyUp);
 	glutKeyboardFunc(InputManager::NormKeyDown);
 	glutKeyboardUpFunc(InputManager::NormKeyUp);
-	glm::vec3 Target;
-
-	//DO NORMAL KEY INPUTS HERE
-
-	//RIGHT KEY INPUT
-	if (KeyArray['d'] == KEY_HELD) {
-		std::cout << "D key held\n";
-	} else if (KeyArray['d'] == KEY_FIRST_PRESS) KeyArray['d'] = KEY_HELD;
-
-	//LEFT KEY INPUT
-	else if (KeyArray['a'] == KEY_HELD) {
-		std::cout << "A key held\n";
-	} else if (KeyArray['a'] == KEY_FIRST_PRESS) KeyArray['a'] = KEY_HELD;
-
-	//UP KEY INPUT
-	else if (KeyArray['w'] == KEY_HELD) {
-		std::cout << "W key held\n";
-	} else if (KeyArray['w'] == KEY_FIRST_PRESS) KeyArray['w'] = KEY_HELD;
-
-	else if (KeyArray['s'] == KEY_HELD) {
-		std::cout << "S key held\n";
-	} else if (KeyArray['s'] == KEY_FIRST_PRESS) KeyArray['s'] = KEY_HELD;
+	for (int i = 0; i < 255; ++i){
+		if (KeyArray[i] == KEY_FIRST_PRESS){
+			KeyArray[i] = KEY_HELD;
+		}
+		if (KeySpecialArray[i] == KEY_FIRST_PRESS){
+			KeySpecialArray[i] = KEY_HELD;
+		}
+	}
 }
 
-//Menu input
-void InputManager::ProcessSpecialKeyInput() {
-	glutSpecialFunc(InputManager::SpecialKeyDown);
-	glutSpecialUpFunc(InputManager::SpecialKeyUp);
-	glutKeyboardFunc(InputManager::NormKeyDown);
-	glutKeyboardUpFunc(InputManager::NormKeyUp);
-	
-	//Impliment Special Keys here
-
+void InputManager::Init(){
+	for (int i = 0; i < 255; ++i){
+		KeyArray[i] = KEY_RELEASED;
+		KeySpecialArray[i] = KEY_RELEASED;
+	}
 }
 
 void InputManager::NormKeyDown(unsigned char key, int x, int y) {

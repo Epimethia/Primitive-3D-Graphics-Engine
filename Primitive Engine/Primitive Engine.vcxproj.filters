@@ -55,8 +55,17 @@
     <ClCompile Include="EntityManager.cpp">
       <Filter>Engine\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Engine\FrameBuffer</Filter>
+    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Engine\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Engine\TextLabel</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Engine\SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Menu</Filter>
@@ -72,6 +81,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
@@ -87,8 +99,20 @@
     <ClInclude Include="EntityManager.h">
       <Filter>Engine\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="CubeMap.h">
+      <Filter>Engine\CubeMap</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Engine\FrameBuffer</Filter>
+    </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Engine\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Engine\TextLabel</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Engine\SoundManager</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Source Files\Menu</Filter>
@@ -104,6 +128,15 @@
     </ClInclude>
     <ClInclude Include="Text.h">
       <Filter>Engine\TextLabel</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryModel.h">
+      <Filter>Other\GeometryModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>Other\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ClothParticle.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

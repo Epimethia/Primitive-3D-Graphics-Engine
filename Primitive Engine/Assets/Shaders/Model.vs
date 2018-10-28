@@ -7,14 +7,17 @@ layout (location = 2) in vec2 texCoords;
 out vec3 fragPos;
 out vec3 fragNormal;
 out vec2 fragTexCoord;
+out vec4 mWorldPos;
 
+uniform mat4 VP;
 uniform mat4 model;
 uniform mat4 MVP;
 uniform float currentTime;
 
-
 void main(void) {
-	gl_Position = MVP * vec4(position, 1.0);
+	vec4 mWorldPos = model * vec4(position, 1.0);
+	gl_Position = VP * mWorldPos;
+
 	fragPos = vec3(model * vec4(position, 1.0f));
 	fragNormal = mat3(transpose(inverse(model))) * normal;
 	fragTexCoord = texCoords;

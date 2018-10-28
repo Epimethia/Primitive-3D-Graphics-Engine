@@ -47,14 +47,12 @@ void SoundManager::PauseBGM() {
 }
 
 const bool SoundManager::LoadAudio() {
-	if (audioMgr->createSound(BG_MUSIC_LOOP, FMOD_DEFAULT, 0, &bgmTheme) != FMOD_OK) {
-		std::cout << "Failed to create Sound " << BG_MUSIC_LOOP << std::endl;
-		return false;
-	}
-	if (audioMgr->createSound(SHOOT_FX, FMOD_DEFAULT, 0, &ShootFX) != FMOD_OK) {
-		std::cout << "Failed to create Sound " << BG_MUSIC_LOOP << std::endl;
-		return false;
-	}
+
+	//if (audioMgr->createSound(BG_MUSIC_LOOP, FMOD_DEFAULT, 0, &bgmTheme) != FMOD_OK) {
+	//	std::cout << "Failed to create Sound " << BG_MUSIC_LOOP << std::endl;
+	//	return false;
+	//}
+
 	bgmTheme->setMode(FMOD_LOOP_NORMAL);
 	std::cout << "Music Loaded Successfully\n";
 	return true;

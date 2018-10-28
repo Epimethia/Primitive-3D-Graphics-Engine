@@ -12,7 +12,7 @@ class InputManager {
 public:
 	InputManager();
 	static void ProcessKeyInput();
-	static void ProcessSpecialKeyInput();
+	static void Init();
 
 	static unsigned char KeyArray[255];
 	static unsigned char KeySpecialArray[255];

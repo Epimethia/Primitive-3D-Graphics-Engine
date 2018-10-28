@@ -1,47 +1,39 @@
 
 #include "Text.h"
 #include "libs\glm\glm.hpp"
+#include "libs\freeglut\freeglut.h"
 #include "libs\glm\gtc\matrix_transform.hpp"
 #include "libs\glm\gtc\type_ptr.hpp"
 
 Text::Text() {};      
 
-Text::Text(std::string newText, std::string newFont, glm::vec2 pos, GLuint Shader, int size) {
-	ShaderLoader shaderLoader;
-
-	TextShaderProg = Shader;
+Text::Text(std::string newText, std::string newFont, glm::vec2 pos, float size) {
 	text = newText;
-	color = glm::vec3(1.0, 1.0, 1.0);
-
-	scale = 0.5;
-	SetPosition(pos);
-
-	glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(UTILS::WindowWidth), 0.0f, static_cast<float>(UTILS::WindowHeight));
-	glUseProgram(TextShaderProg);
-	glUniformMatrix4fv(glGetUniformLocation(TextShaderProg, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+	color = glm::vec3(1.0f, 1.0f, 1.0f);
+	scale = static_cast<GLfloat>(size);
+	position = pos;
+	TextShaderProg = ShaderLoader::CreateProgram("Assets/Shaders/Text.vs", "Assets/Shaders/Text.fs");
 
 	// Initiate the font Lib
 	FT_Library ft;
-	if (FT_Init_FreeType(&ft)) {
+	if (FT_Init_FreeType(&ft)){
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 	}
-
 	// Each character is called a glyph and Face is the collection of glyphs
 	FT_Face face;
 	// Load font as face;
-	if (FT_New_Face(ft, newFont.c_str(), 0, &face)) {
+	if (FT_New_Face(ft, newFont.c_str(), 0, &face)){
 		std::cout << "ERROR::FREETYPE: Failed to Load font" << std::endl;
 	}
 	// Set size to load glyph as
-	FT_Set_Pixel_Sizes(face, 0, size * 2);
+	FT_Set_Pixel_Sizes(face, 0, 48);
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-
 	// Load the first 128 characters of the ASCII set
-	for (GLubyte c = 0; c < 128; c++) {
+	for (GLubyte c = 0; c < 128; c++){
 		// Load the character glyph into face
-		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
 			std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
 			continue;
 		}
@@ -57,10 +49,10 @@ Text::Text(std::string newText, std::string newFont, glm::vec2 pos, GLuint Shade
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		// Now to store character for later use
-		Character character = { texture,
-			glm::ivec2(static_cast<GLuint>(face->glyph->bitmap.width), static_cast<GLuint>(face->glyph->bitmap.rows)),
-			glm::ivec2(static_cast<GLuint>(face->glyph->bitmap_left), static_cast<GLuint>(face->glyph->bitmap_top)),
-			static_cast<GLuint>(face->glyph->advance.x)
+		Character character = {texture,
+			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			(GLuint) face->glyph->advance.x
 		};
 		CharMap.insert(std::pair<GLchar, Character>(c, character));
 	}
@@ -93,7 +85,7 @@ void Text::Render() {
 	glm::vec2 textPos = position;
 
 	// Enable blending
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -103,8 +95,12 @@ void Text::Render() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
+	glm::mat4 proj = glm::ortho(0.0f, (GLfloat) UTILS::WindowWidth, 0.0f , (GLfloat) UTILS::WindowHeight);
+	glUseProgram(TextShaderProg);
+	glUniformMatrix4fv(glGetUniformLocation(TextShaderProg, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
+
 	// Iterate through the Characters
-	for (std::string::const_iterator c = text.begin(); c != text.end(); c++) {
+	for (std::string::const_iterator c = text.begin(); c != text.end(); c++){
 		Character ch = CharMap[*c];
 
 		GLfloat xpos = textPos.x + ch.Bearing.x * scale;
@@ -115,8 +111,8 @@ void Text::Render() {
 
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
-			{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos + h, 1.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },
-		{ xpos, ypos + h, 0.0, 0.0 },{ xpos + w, ypos, 1.0, 1.0 },{ xpos, ypos, 0.0, 1.0 },
+			{xpos, ypos + h, 0.0, 0.0}, {xpos + w, ypos + h, 1.0, 0.0}, {xpos + w, ypos, 1.0, 1.0},
+		{xpos, ypos + h, 0.0, 0.0}, {xpos + w, ypos, 1.0, 1.0}, {xpos, ypos, 0.0, 1.0},
 		};
 
 		// Render the glyph texture over the quad
@@ -132,6 +128,5 @@ void Text::Render() {
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 }
