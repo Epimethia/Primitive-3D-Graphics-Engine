@@ -9,11 +9,11 @@ out VS_GS_VERTEX{
 	out mat4 mvp;
 } vs_out;
 
-uniform mat4 mvp;
+uniform mat4 MVP;
 
 void main(){
-	gl_Position = mvp * vec4(position, 1.0f);
+	gl_Position = MVP * vec4(position, 1.0f);
 	vs_out.color = vec3(0.04f, 0.39f, 0.13f);
 	vs_out.position = gl_Position;
-	vs_out.mvp = mvp;
+	vs_out.mvp = MVP;
 }

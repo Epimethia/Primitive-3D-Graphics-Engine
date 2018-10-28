@@ -35,6 +35,27 @@
     <Filter Include="Engine\TextLabel">
       <UniqueIdentifier>{5bdd3b5f-3b5a-46d2-9e7f-70ac2264063d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\FrameBuffer">
+      <UniqueIdentifier>{95f68b9f-1c20-40f6-9244-69d17fba1d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Cloth">
+      <UniqueIdentifier>{7061efaf-54c7-406a-a98a-65888204d1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GeometryModel">
+      <UniqueIdentifier>{2fb79d0b-8a24-4623-ac7b-4e7ff61c8a79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PlayerObject">
+      <UniqueIdentifier>{aad18cd1-d7aa-4129-9f65-0103c12a751b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Terrain">
+      <UniqueIdentifier>{351f0fad-a7ed-4150-80f9-1abd4e237f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TessModel">
+      <UniqueIdentifier>{fbe4e96c-f991-4edf-b883-0442371474c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particle System">
+      <UniqueIdentifier>{65a8cb8d-6f25-42f1-90d2-4f1cfbb66bab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -54,9 +75,6 @@
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Engine\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameBuffer.cpp">
-      <Filter>Engine\FrameBuffer</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Engine\InputManager</Filter>
@@ -79,11 +97,29 @@
     <ClCompile Include="Text.cpp">
       <Filter>Engine\TextLabel</Filter>
     </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Engine\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClothParticle.cpp">
+      <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryModel.cpp">
+      <Filter>Source Files\GeometryModel</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject.cpp">
+      <Filter>Source Files\PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TessModel.cpp">
+      <Filter>Source Files\TessModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files\Particle System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine\Camera</Filter>
     </ClInclude>
@@ -101,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="CubeMap.h">
       <Filter>Engine\CubeMap</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameBuffer.h">
-      <Filter>Engine\FrameBuffer</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Engine\InputManager</Filter>
@@ -129,14 +162,26 @@
     <ClInclude Include="Text.h">
       <Filter>Engine\TextLabel</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryModel.h">
-      <Filter>Other\GeometryModel</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerObject.h">
-      <Filter>Other\PlayerObject</Filter>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Engine\FrameBuffer</Filter>
     </ClInclude>
     <ClInclude Include="ClothParticle.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryModel.h">
+      <Filter>Source Files\GeometryModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>Source Files\PlayerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Source Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TessModel.h">
+      <Filter>Source Files\TessModel</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Source Files\Particle System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

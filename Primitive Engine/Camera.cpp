@@ -3,7 +3,7 @@ std::shared_ptr<Camera> Camera::CameraPtr;
 glm::mat4 Camera::VPMat;
 glm::mat4 Camera::View;
 glm::mat4 Camera::Projection;
-glm::vec3 Camera::CameraPos = { 0.0f, 0.0f, -5.0f };
+glm::vec3 Camera::CameraPos = { 0.0f, 0.0f, 0.0f };
 static int XRot;
 static int YRot;
 
@@ -25,7 +25,7 @@ std::shared_ptr<Camera> Camera::GetInstance() {
 	glm::mat4 RotationMatrixX =
 		glm::rotate(
 			glm::mat4(),
-			glm::radians(-35.0f),
+			glm::radians(35.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f)
 		);
 
@@ -56,22 +56,12 @@ glm::mat4 Camera::GetVPMatrix() {
 }
 
 void Camera::Process(){
-	View = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 20000.0f);
 	glm::mat4 RotationMatrixX =
 		glm::rotate(
 			glm::mat4(),
-			glm::radians(-65.0f),
+			glm::radians(30.0f),
 			glm::vec3(1.0f, 0.0f, 0.0f)
 		);
-
-	glm::mat4 RotationMatrixY =
-		glm::rotate(
-			glm::mat4(),
-			glm::radians(0.0f),
-			glm::vec3(0.0f, 0.0f, 1.0f)
-		);
-
 	glm::mat4 TranslationMatrix =
 		glm::translate(
 			glm::mat4(),

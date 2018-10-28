@@ -9,10 +9,7 @@ InputManager::InputManager() {
 }
 
 void InputManager::ProcessKeyInput() {
-	glutSpecialFunc(InputManager::SpecialKeyDown);
-	glutSpecialUpFunc(InputManager::SpecialKeyUp);
-	glutKeyboardFunc(InputManager::NormKeyDown);
-	glutKeyboardUpFunc(InputManager::NormKeyUp);
+
 	for (int i = 0; i < 255; ++i){
 		if (KeyArray[i] == KEY_FIRST_PRESS){
 			KeyArray[i] = KEY_HELD;
@@ -21,6 +18,11 @@ void InputManager::ProcessKeyInput() {
 			KeySpecialArray[i] = KEY_HELD;
 		}
 	}
+
+	glutSpecialFunc(InputManager::SpecialKeyDown);
+	glutSpecialUpFunc(InputManager::SpecialKeyUp);
+	glutKeyboardFunc(InputManager::NormKeyDown);
+	glutKeyboardUpFunc(InputManager::NormKeyUp);
 }
 
 void InputManager::Init(){

@@ -23,7 +23,7 @@ void Terrain::Init(){
 	GrassQuadGeomShader = ShaderLoader::CreateProgram("Assets/Shaders/GrassShader.vs", "Assets/Shaders/GrassShader - Quads.fs", "Assets/Shaders/GrassShader - Quads.gs");
 	ObjPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	ObjScale = glm::vec3(1.0f, 1.0f, 1.0f);
-	ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	ObjRotation = glm::vec3(90.0f, 0.0f, 180.0f);
 
 
 	LoadHeightMap("Assets/Height Maps/coastMountain513.raw");
@@ -59,7 +59,7 @@ void Terrain::Render(){
 	//Setting back face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glFrontFace(GL_CW);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -242,7 +242,7 @@ void Terrain::GenerateVertBuffer(){
 			//Positional Data
 			PlaneVerts[i++] = static_cast<GLfloat>(col * Separation) - ((GridSize - 1) * Separation * 0.5f);
 			PlaneVerts[i++] = static_cast<GLfloat>(row * Separation) - ((GridSize - 1) * Separation * 0.5f);
-			PlaneVerts[i++] = static_cast<GLfloat>(HeightMapData[(row * GridSize) + col]);
+			PlaneVerts[i++] = static_cast<GLfloat>(HeightMapData[(row * GridSize) + col] * -1.0f);
 
 			//Normal Data
 			PlaneVerts[i++] = static_cast<GLfloat>(NormalVals[normalIndex].x);
@@ -337,7 +337,7 @@ void Terrain::LoadHeightMap(std::string _HeightMapFilePath){
 	// Copy the array data into a float array, and scale and offset the heights.
 	HeightMapData.resize(totalGridSize, 0);
 	for (unsigned int i = 0; i < totalGridSize; ++i){
-		HeightMapData[i] = (float) in[i] * HeightScale + 1.0f;
+		HeightMapData[i] = (float) in[i] * HeightScale;
 	}
 	// Reverse the array data to get a not-upside down terrain
 	std::reverse(HeightMapData.begin(), HeightMapData.end());
@@ -463,6 +463,7 @@ void Terrain::RenderGrass() {
 
 	glUseProgram(CurrentShader);
 
+
 	//Binding the array
 	glBindVertexArray(grassVAO);
 
@@ -470,16 +471,42 @@ void Terrain::RenderGrass() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	SetUniforms();
 	//Setting and binding the correct texture
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, GrassTexture);
 
+	glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), (ObjPos));
+
+	//Y Rotation
+	glm::mat4 RotationMatrix =
+		glm::rotate(glm::mat4(), glm::radians(ObjRotation.x), glm::vec3(1.0f, 0.0f, 0.0f)) *
+		glm::rotate(glm::mat4(), glm::radians(ObjRotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::rotate(glm::mat4(), glm::radians(ObjRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), ObjScale);
+
+	glm::mat4 ModelMatrix = TranslationMatrix * RotationMatrix * ScaleMatrix;
+
+	glm::mat4 MVP = Camera::GetVPMatrix() * ModelMatrix;
+
+	glUniformMatrix4fv(glGetUniformLocation(CurrentShader, "VP"), 1, GL_FALSE, glm::value_ptr(Camera::GetVPMatrix()));
+	glUniformMatrix4fv(glGetUniformLocation(CurrentShader, "MVP"), 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix4fv(glGetUniformLocation(CurrentShader, "model"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+	glUniform3fv(glGetUniformLocation(CurrentShader, "camPos"), 1, glm::value_ptr(Camera::GetPos()));
+
 	//Sending the texture to the GPU via uniform
 	glUniform1i(glGetUniformLocation(CurrentShader, "tex"), 0);
 
+	
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 
 	glDrawArrays(GL_POINTS, 0, GridSize*GridSize);
+
+		//Setting back face culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CCW);
 
 	//Clearing the vertex array
 	glBindVertexArray(0);

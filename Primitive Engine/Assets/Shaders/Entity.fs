@@ -10,7 +10,7 @@ uniform sampler2D tex;
 uniform float ambientStr = 0.0f;
 uniform vec3 ambientColor = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
-uniform vec3 lightPos = vec3(700.0f, 700.0f, 1000.0f);
+uniform vec3 lightPos = vec3(0.0f, 0.0f, -1000.0f);
 uniform float lightSpecStr = 1.0f;
 uniform vec3 camPos;
 uniform float shininess = 1.0f;

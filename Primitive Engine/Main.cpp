@@ -17,8 +17,6 @@ Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
 
-ClothParticle* cp;
-
 void ProcessInput();
 
 
@@ -32,13 +30,12 @@ void Initialize() {
 	glFrontFace(GL_CW);
 	glEnable(GL_MULTISAMPLE);
 	EntityManager::GetInstance();
-	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, -1.0f);
+	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
 	t->Init();
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
 	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
-	cp = new ClothParticle(glm::vec3(0.0f, 0.0f, -1.0f));
 	fb->Init();
 }
 
@@ -55,7 +52,6 @@ void Render(void) {
 	tx1->Render();
 	tx2->Render();
 	fb->Render();
-	cp->Render();
 	//-----------------//
 
 	glutSwapBuffers();
@@ -72,7 +68,7 @@ void Process(void) {
 	//DO LOGIC PROCESSING HERE//
 	//Use g_DeltaTime if possible
 	ProcessInput();
-	fb->dt += g_DeltaTime / 2.0f;
+	fb->dt += g_DeltaTime;
 	Camera::Process();
 	//------------------------//
 	glutPostRedisplay();
@@ -129,10 +125,10 @@ void ProcessInput(){
 
 	auto CameraPos = &Camera::GetPos();
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		CameraPos->y -= 0.8f * g_DeltaTime;
+		CameraPos->z += 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['s'] == KEY_HELD) {
-		CameraPos->y += 0.8f * g_DeltaTime;
+		CameraPos->z -= 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['a'] == KEY_HELD) {
 		CameraPos->x += 0.8f * g_DeltaTime;
@@ -141,10 +137,10 @@ void ProcessInput(){
 		CameraPos->x -= 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray[32] == KEY_HELD) {
-		CameraPos->z -= 0.8f * g_DeltaTime;
+		CameraPos->y -= 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
-		CameraPos->z += 0.8f * g_DeltaTime;
+		CameraPos->y += 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();

@@ -38,7 +38,7 @@ void main() {
         pos.x += i * 0.05f;
         pos.y -= 0.05f;
         pos.z -= 0.7f;
-    gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
+        gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.0f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(-0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();
         gl_Position = pos + gs_in[0].mvp * vec4(0.002f, 0.0f, 0.006f, 0.0f); EmitVertex();

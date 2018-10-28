@@ -44,12 +44,12 @@ void main() {
     EmitVertex();
     
     //Top left
-    gl_Position = pos + gs_in[0].mvp * vec4(0.02f, 0.0f, 0.02f, 0.0f);
+    gl_Position = pos + gs_in[0].mvp * vec4(0.02f, 0.0f, -0.02f, 0.0f);
     fragTexCoord = vec2(1.0f, 0.0f);
     EmitVertex();
 
     //Bottom Left
-    gl_Position = pos + gs_in[0].mvp * vec4(-0.02f, 0.0f, 0.02f, 0.0f);
+    gl_Position = pos + gs_in[0].mvp * vec4(-0.02f, 0.0f, -0.02f, 0.0f);
     fragTexCoord = vec2(0.0f, 0.0f);
     EmitVertex();
     EndPrimitive();
@@ -67,12 +67,12 @@ void main() {
     EmitVertex();
     
     //Top left
-    gl_Position = pos + mpvrotated * vec4(0.02f, 0.0f, 0.02f, 0.0f);
+    gl_Position = pos + mpvrotated * vec4(0.02f, 0.0f, -0.02f, 0.0f);
     fragTexCoord = vec2(1.0f, 0.0f);
     EmitVertex();
 
     //Bottom Left
-    gl_Position = pos + mpvrotated * vec4(-0.02f, 0.0f, 0.02f, 0.0f);
+    gl_Position = pos + mpvrotated * vec4(-0.02f, 0.0f, -0.02f, 0.0f);
     fragTexCoord = vec2(0.0f, 0.0f);
     EmitVertex();
     EndPrimitive();

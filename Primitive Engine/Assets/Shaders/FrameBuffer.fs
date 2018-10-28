@@ -13,6 +13,10 @@ void main()
 { 
 
     if (DisplayMode == 0) {
+        color = texture(tex, fragTexCoords);
+    }
+   
+    else if (DisplayMode == 1) {
         float offset = 1.0 / 300.0;
         vec2 offsets[9] = vec2[](
             vec2(-offset,  offset), // top-left
@@ -52,8 +56,8 @@ void main()
         color = vec4(col, 1.0);
         return;
     }
-   
-    else if (DisplayMode == 1) {
+
+    else {
         //#################################################################
         //Scan lines + blur + chromatic aberration effect 
         //taken from https://www.shadertoy.com/view/XdXXD4
@@ -85,10 +89,6 @@ void main()
         
         color = vec4(col,1.0);
         return;
-    }
-
-    else {
-        color = texture(tex, fragTexCoords);
     }
     
 }
