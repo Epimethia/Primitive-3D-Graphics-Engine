@@ -6,8 +6,7 @@
 #include "Terrain.h"
 #include "FrameBuffer.h"
 #include "Text.h"
-
-#include "ClothParticle.h"
+#include "ParticleSystem.h"
 
 float g_DeltaTime = 0.0f;
 
@@ -16,6 +15,7 @@ Text* tx0;
 Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
+ParticleSystem* ps;
 
 void ProcessInput();
 
@@ -32,6 +32,8 @@ void Initialize() {
 	EntityManager::GetInstance();
 	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
+	ps = new ParticleSystem(glm::vec3(0.0f, 100.0f, 0.0f));
+	ps->Init();
 	t->Init();
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
@@ -47,11 +49,12 @@ void Render(void) {
 
 	//RENDER ITEMS HERE//
 	fb->BeginCapture();
-	t->Render();
+	//t->Render();
 	tx0->Render();
 	tx1->Render();
 	tx2->Render();
 	fb->Render();
+	ps->Render(g_DeltaTime);
 	//-----------------//
 
 	glutSwapBuffers();

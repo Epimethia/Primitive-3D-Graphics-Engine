@@ -27,8 +27,6 @@ mat4 rotationMatrix(vec3 axis, float angle)
 }
 
 void main() {
-    
-    
 
     outColor = gs_in[0].color;
     vec4 pos = gs_in[0].position;
