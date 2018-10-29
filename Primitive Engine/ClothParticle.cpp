@@ -2,6 +2,11 @@
 #include "Clock.h"
 #include "Camera.h"
 
+/*A random function used for the generation of particles.			*/	
+static float randomFloat() {
+	return (float)rand() / (double)RAND_MAX;
+}
+
 //Constructor overload for the cloth particle.
 ClothParticle::ClothParticle()
 {

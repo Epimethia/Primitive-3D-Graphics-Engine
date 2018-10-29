@@ -33,10 +33,10 @@ private:
 
 class Particle {
 public:
-	Particle(const glm::vec3 _Origin, const glm::vec3 _Vel = {0.0f, 1.0f, 0.0f}, const float _MaxLifetime = 5.0f);
+	Particle(const glm::vec3 _Origin, const glm::vec3 _Vel = {0.0f, 1.0f, 0.0f}, const float _MaxLifetime = 5.0f, int _ID = 0);
 	void Update(const float _fdeltaTime);
 	glm::vec3 GetPos();
-
+	int m_iID;
 
 private:
 	glm::vec3 m_v3Velocity;
