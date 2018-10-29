@@ -12,6 +12,7 @@ public:
 	static glm::vec3& GetPos() { return CameraPos; };
 	static glm::vec3 GetFront() { return Front; };
 	static glm::vec3 GetUp() { return Up; };
+	static glm::vec3 GetRight() { return Right; };
 	static void Process();
 	static int XRot;
 	static int YRot;
@@ -22,5 +23,5 @@ private:
 	static glm::mat4 View, Projection;
 	static glm::mat4 VPMat;
 	static glm::vec3 CameraPos;
-	static glm::vec3 Front, Up;
+	static glm::vec3 Front, Up, Right;
 };

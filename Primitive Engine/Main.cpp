@@ -32,7 +32,7 @@ void Initialize() {
 	EntityManager::GetInstance();
 	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
-	ps = new ParticleSystem(glm::vec3(0.0f, 100.0f, 0.0f));
+	ps = new ParticleSystem(Camera::GetPos());
 	ps->Init();
 	t->Init();
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
@@ -128,22 +128,22 @@ void ProcessInput(){
 
 	auto CameraPos = &Camera::GetPos();
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		CameraPos->z += 0.8f * g_DeltaTime;
-	}
-	if (InputManager::KeyArray['s'] == KEY_HELD) {
 		CameraPos->z -= 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['a'] == KEY_HELD) {
-		CameraPos->x += 0.8f * g_DeltaTime;
+	if (InputManager::KeyArray['s'] == KEY_HELD) {
+		CameraPos->z += 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['d'] == KEY_HELD) {
+	if (InputManager::KeyArray['a'] == KEY_HELD) {
 		CameraPos->x -= 0.8f * g_DeltaTime;
 	}
+	if (InputManager::KeyArray['d'] == KEY_HELD) {
+		CameraPos->x += 0.8f * g_DeltaTime;
+	}
 	if (InputManager::KeyArray[32] == KEY_HELD) {
-		CameraPos->y -= 0.8f * g_DeltaTime;
+		CameraPos->y += 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
-		CameraPos->y += 0.8f * g_DeltaTime;
+		CameraPos->y -= 0.8f * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();
