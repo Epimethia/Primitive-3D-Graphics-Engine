@@ -46,16 +46,16 @@ void Initialize() {
 /*Render() function that calls all your object's Render functions. There  */
 /*should really only be a single render call in here.					  */
 void Render(void) {
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	//RENDER ITEMS HERE//
-	//fb->BeginCapture();
-	//t->Render();
-	tx0->Render();
+	fb->BeginCapture();
+	t->Render();
+	//tx0->Render();
 	//tx1->Render();
 	//tx2->Render();
-	//fb->Render();
-	ps->Render(g_DeltaTime);
+	fb->Render();
+	//ps->Render(g_DeltaTime);
 	//-----------------//
 
 	glutSwapBuffers();
