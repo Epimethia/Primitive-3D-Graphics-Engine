@@ -7,6 +7,7 @@
 #include "FrameBuffer.h"
 #include "Text.h"
 #include "ParticleSystem.h"
+#include "Cloth.h"
 
 float g_DeltaTime = 0.0f;
 
@@ -15,7 +16,7 @@ Text* tx0;
 Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
-ParticleSystem* ps;
+std::shared_ptr<Cloth> cl = std::make_shared<Cloth>();
 
 void ProcessInput();
 
@@ -32,8 +33,11 @@ void Initialize() {
 	EntityManager::GetInstance();
 	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
-	ps = new ParticleSystem(Camera::GetPos());
-	ps->Init();
+	
+	//ps = new ParticleSystem(Camera::GetPos());
+	//ps->Init();
+	cl->Init();
+
 	t->Init();
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
@@ -46,19 +50,21 @@ void Initialize() {
 /*Render() function that calls all your object's Render functions. There  */
 /*should really only be a single render call in here.					  */
 void Render(void) {
+
 	//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	//RENDER ITEMS HERE//
 	fb->BeginCapture();
-	t->Render();
+	//t->Render();
 	//tx0->Render();
 	//tx1->Render();
 	//tx2->Render();
+	cl->Render();
 	fb->Render();
 	//ps->Render(g_DeltaTime);
 	//-----------------//
 
-	glutSwapBuffers();
+ 	glutSwapBuffers();
 }
 
 
@@ -67,13 +73,14 @@ void Render(void) {
 /*pass in DeltaTime (as updates to the g_DeltaTime are called at the start*/
 /*of this loop.															  */
 void Process(void) {
-	g_DeltaTime = Clock::ProcessClock();
+	g_DeltaTime = Clock::GetInstance()->ProcessClock();
 
 	//DO LOGIC PROCESSING HERE//
 	//Use g_DeltaTime if possible
 	ProcessInput();
 	fb->dt += g_DeltaTime;
 	Camera::Process();
+	cl->Update(g_DeltaTime);
 	//------------------------//
 	glutPostRedisplay();
 }
@@ -93,9 +100,9 @@ int main(int argc, char **argv) {
 
 	//The initialization parameters of the window
 	glutInitDisplayMode(
-		GLUT_DEPTH | 
+		GLUT_DEPTH  | 
 		GLUT_DOUBLE | 
-		GLUT_RGBA | 
+		GLUT_RGBA   | 
 		GLUT_MULTISAMPLE
 	);
 
@@ -112,13 +119,14 @@ int main(int argc, char **argv) {
 	glutCreateWindow("Terrain Generation");
 
 	//Window Background color (default pixel color when nothing is rendered over it)
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Glut initialization functions.
 	glewInit();
-	Initialize();
 	glutDisplayFunc(Render);
 	glutIdleFunc(Process);
+	Initialize();
+
 	glutIgnoreKeyRepeat(1);
 	glutCloseFunc(Exit);
 	glutMainLoop();
@@ -126,44 +134,32 @@ int main(int argc, char **argv) {
 }
 
 void ProcessInput(){
+	float speed = 10.0f;
 
 	auto CameraPos = &Camera::GetPos();
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		CameraPos->z -= 0.8f * g_DeltaTime;
+		CameraPos->z -= speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['s'] == KEY_HELD) {
-		CameraPos->z += 0.8f * g_DeltaTime;
+		CameraPos->z += speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['a'] == KEY_HELD) {
-		CameraPos->x -= 0.8f * g_DeltaTime;
+		CameraPos->x -= speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['d'] == KEY_HELD) {
-		CameraPos->x += 0.8f * g_DeltaTime;
+		CameraPos->x += speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray[32] == KEY_HELD) {
-		CameraPos->y += 0.8f * g_DeltaTime;
+		CameraPos->y += speed * g_DeltaTime;
 	}
 	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
-		CameraPos->y -= 0.8f * g_DeltaTime;
+		CameraPos->y -= speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();
 	}
 	if (InputManager::KeyArray['g'] == KEY_FIRST_PRESS) {
 		t->ToggleGrass();
-	}
-
-	if (CameraPos->x > 2.54f) {
-		CameraPos->x = 2.54f;
-	}
-	if (CameraPos->x < -2.54f) {
-		CameraPos->x = -2.54f;
-	}
-	if (CameraPos->y > 2.54f) {
-		CameraPos->y = 2.54f;
-	}
-	if (CameraPos->y < -2.54f) {
-		CameraPos->y = -2.54f;
 	}
 
 	InputManager::ProcessKeyInput();

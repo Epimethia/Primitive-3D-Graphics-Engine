@@ -100,9 +100,6 @@
     <ClCompile Include="FrameBuffer.cpp">
       <Filter>Engine\FrameBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="ClothParticle.cpp">
-      <Filter>Source Files\Cloth</Filter>
-    </ClCompile>
     <ClCompile Include="GeometryModel.cpp">
       <Filter>Source Files\GeometryModel</Filter>
     </ClCompile>
@@ -117,6 +114,15 @@
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files\Particle System</Filter>
+    </ClCompile>
+    <ClCompile Include="Cloth.cpp">
+      <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="ClothParticle.cpp">
+      <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="Spring.cpp">
+      <Filter>Source Files\Cloth</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +171,6 @@
     <ClInclude Include="FrameBuffer.h">
       <Filter>Engine\FrameBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="ClothParticle.h">
-      <Filter>Source Files\Cloth</Filter>
-    </ClInclude>
     <ClInclude Include="GeometryModel.h">
       <Filter>Source Files\GeometryModel</Filter>
     </ClInclude>
@@ -182,6 +185,15 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Source Files\Particle System</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloth.h">
+      <Filter>Source Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="ClothParticle.h">
+      <Filter>Source Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring.h">
+      <Filter>Source Files\Cloth</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

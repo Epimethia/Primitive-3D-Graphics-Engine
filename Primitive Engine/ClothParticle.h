@@ -7,12 +7,31 @@ namespace {
 
 class ClothParticle {
 public:
+	
 	ClothParticle();
 	ClothParticle(glm::vec3 _Pos);
 	~ClothParticle();
 
-	void Update();
-	void Render();
+	void Update(float _deltaTime);
+	void AddImpulse(const vec3 _Force);
+	void SetMass(const float _mass);
+	void ApplyForces();
+	
+	//setters and getters
+	vec3 GetPos()     { return m_v3CurrentPos; };
+	vec3 GetVelocity(){ return m_v3Velocity; };
+
+	bool m_bPinned;
+	bool m_bDrawn = false;
+	int  m_iD;
+
 private:
-	vec3 currentPosition, previousPosition, currentVelocity, oldVelocity;
+	float InvMass();
+
+	vec3  m_v3CurrentPos;
+	vec3  m_v3PrevPos;
+	vec3  m_v3Velocity;
+	vec3  m_v3Forces;
+	float m_fMass;
 };
+

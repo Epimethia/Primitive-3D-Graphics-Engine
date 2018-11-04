@@ -33,7 +33,7 @@
 namespace UTILS {
 	const int WindowWidth = 1600;
 	const int WindowHeight = 900;
-	const glm::vec3 Gravity = { 0.0f, 0.0f, -9.8f };
+	const glm::vec3 Gravity = { 0.0f, -9.8f, 0.0f };
 }
 
 #pragma region SHADER MACROS

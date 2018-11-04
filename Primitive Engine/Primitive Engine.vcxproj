@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="ClothParticle.cpp" />
     <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TessModel.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -148,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="Cloth.h" />
     <ClInclude Include="ClothParticle.h" />
     <ClInclude Include="CubeMap.h" />
     <ClInclude Include="Entity.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TessModel.h" />
     <ClInclude Include="Text.h" />

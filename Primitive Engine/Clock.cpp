@@ -9,7 +9,11 @@ Clock::Clock() {
 };
 
 std::shared_ptr<Clock> Clock::GetInstance() {
-	if (ClockPtr == nullptr) ClockPtr = std::shared_ptr <Clock>(new Clock());
+	if (ClockPtr == nullptr){
+		ClockPtr = std::shared_ptr <Clock>(new Clock());
+		OldTime = static_cast<float>(glutGet(GLUT_ELAPSED_TIME) / 1000.0f);
+		TimeDelta = 0.0f;
+	}
 	return ClockPtr;
 };
 
@@ -21,5 +25,5 @@ float Clock::ProcessClock() {
 };
 
 float Clock::GetDeltaTime() {
-	return OldTime;
+	return TimeDelta;
 }
