@@ -67,11 +67,9 @@ void Cloth::Init() {
 	//Generating the texture from image data
 	glTexImage2D(
 		GL_TEXTURE_2D,
-		0,
-		GL_RGBA,
+		0, GL_RGBA,
 		width, height,
-		0,
-		GL_RGBA,
+		0, GL_RGBA,
 		GL_UNSIGNED_BYTE,
 		image
 	);
@@ -140,9 +138,11 @@ void Cloth::Render() {
 
 void Cloth::Update(float _deltaTime) {
 	
-
+	/*------------------------------------------------------------------------------*/
+	/*Function that iterates through all the springs, calling each spring's update	*/
+	/*function in succession.														*/
+	/*------------------------------------------------------------------------------*/
 	for (auto it : m_vecClothParticleVect) {
-		//Resetting all particles so that they can be drawn
 		it->Update(_deltaTime);
 	}
 
@@ -159,10 +159,8 @@ void Cloth::Update(float _deltaTime) {
 	}
 
 
-
 	UpdateVectors();
 	BindBuffers();
-	//std::cout << glm::to_string(m_vecStructuralSprings[0]->m_pLinkedParticle0->GetVelocity()) << std::endl;
 }
 
 void Cloth::SetupLinks()
@@ -291,21 +289,9 @@ void Cloth::UpdateVectors(){
 		m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
 		m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
 	}
-
-	////iterating through shear spring array
-	//for (auto it : m_vecShearSprings){
-	//	m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
-	//	m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
-	//}
-
-	////iterating through bend spring array
-	//for (auto it : m_vecBendSprings){
-	//	m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
-	//	m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
-	//}
 	
+	m_vecClothParticleVect.shrink_to_fit();
 	m_vecIndices.shrink_to_fit();
-
 	BindBuffers();
 }
 

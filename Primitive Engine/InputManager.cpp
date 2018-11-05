@@ -24,7 +24,9 @@ void InputManager::ProcessInputs() {
 	glutKeyboardFunc(InputManager::NormKeyDown);
 	glutKeyboardUpFunc(InputManager::NormKeyUp);
 
-	glutMouseFunc(InputManager::ProcessMouseButtons);
+	/*glutMouseFunc(InputManager::ProcessMouseButtons);
+	glutPassiveMotionFunc(InputManager::ProcessMousePassiveMovement);
+	glutMotionFunc(InputManager::ProcessMouseMovement);*/
 }
 
 void InputManager::Init(){
