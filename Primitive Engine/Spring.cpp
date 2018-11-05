@@ -34,7 +34,7 @@ void Spring::SetConstants(float _fK, float _fB) {
 	m_fB = _fB;
 }
 
-void Spring::ApplyForce(float _dt){
+void Spring::ApplyForce(float _deltaTime){
 	/*------------------------------------------------------------------------------*/
 	/*Apply force calculation for the spring. Using Hooke's law, calculates the		*/
 	/*force that is required for each particle to return the system to its initial  */
@@ -46,7 +46,6 @@ void Spring::ApplyForce(float _dt){
 
 	float x = glm::length(relativePos) - m_fRestDistance;
 	float v = glm::length(relativeVel);
-
 	//Hooke's law
 	float F = (-m_fK * x) + (-m_fB * v);
 

@@ -11,12 +11,11 @@
 
 float g_DeltaTime = 0.0f;
 
-Terrain* t = new Terrain;
 Text* tx0;
 Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
-std::shared_ptr<Cloth> cl = std::make_shared<Cloth>();
+std::shared_ptr<Cloth> cl;
 
 void ProcessInput();
 
@@ -34,11 +33,9 @@ void Initialize() {
 	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
 	
-	//ps = new ParticleSystem(Camera::GetPos());
-	//ps->Init();
+	cl = std::make_shared<Cloth>();
 	cl->Init();
 
-	t->Init();
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
 	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
@@ -51,17 +48,13 @@ void Initialize() {
 /*should really only be a single render call in here.					  */
 void Render(void) {
 
-	//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	//RENDER ITEMS HERE//
 	fb->BeginCapture();
-	//t->Render();
-	//tx0->Render();
-	//tx1->Render();
-	//tx2->Render();
+	tx0->Render();
+	tx1->Render();
+	tx2->Render();
 	cl->Render();
 	fb->Render();
-	//ps->Render(g_DeltaTime);
 	//-----------------//
 
  	glutSwapBuffers();
@@ -123,10 +116,9 @@ int main(int argc, char **argv) {
 
 	//Glut initialization functions.
 	glewInit();
+	Initialize();
 	glutDisplayFunc(Render);
 	glutIdleFunc(Process);
-	Initialize();
-
 	glutIgnoreKeyRepeat(1);
 	glutCloseFunc(Exit);
 	glutMainLoop();
@@ -134,7 +126,7 @@ int main(int argc, char **argv) {
 }
 
 void ProcessInput(){
-	float speed = 10.0f;
+	float speed = 30.0f;
 
 	auto CameraPos = &Camera::GetPos();
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
@@ -156,12 +148,9 @@ void ProcessInput(){
 		CameraPos->y -= speed * g_DeltaTime;
 	}
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
-		fb->CycleDisplayMode();
-	}
-	if (InputManager::KeyArray['g'] == KEY_FIRST_PRESS) {
-		t->ToggleGrass();
+		
 	}
 
-	InputManager::ProcessKeyInput();
+	InputManager::ProcessInputs();
 }
 

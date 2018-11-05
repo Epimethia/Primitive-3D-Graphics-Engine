@@ -3,13 +3,15 @@
 #include "ShaderLoader.h"
 #include "Camera.h"
 #include "Spring.h"
+#include "libs/glm/gtx/string_cast.hpp"
 Cloth::Cloth()
 {
-	m_v3ObjPos      = glm::vec3(-0.5f, 0.0f, -20.0f);
+	m_v3ObjPos      = glm::vec3(-0.5f, 0.0f, -100.0f);
 	m_v3ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	m_usClothWidth  = 20;
-	m_usClothHeight = 20;	
+	m_usClothHeight = 20;
+
 }
 
 Cloth::~Cloth()
@@ -18,44 +20,32 @@ Cloth::~Cloth()
 }
 
 void Cloth::Init() {
-	float XSeparation = 1.0f / (static_cast<float>(m_usClothWidth - 1)) * 20.0f;
-	float YSeparation = 1.0f / (static_cast<float>(m_usClothHeight - 1)) * 20.0f;
+	float XSeparation = 1.0f / (static_cast<float>(m_usClothWidth - 1)) * 100.0f;
+	float YSeparation = 1.0f / (static_cast<float>(m_usClothHeight - 1)) * 100.0f;
 
 	for (unsigned int i = 0; i < m_usClothHeight; i++) {
 		for (unsigned int j = 0; j < m_usClothWidth; j++) {
 			//Creating a new particle
 			vec3 Pos = vec3(-1.0f + (XSeparation * j) , -1.0f + (YSeparation * i), 0.0f) + m_v3ObjPos;
 			auto n = std::make_shared<ClothParticle>(Pos);
-			m_vecVertVect.push_back(Pos);
 			n->m_iD = (i* m_usClothHeight) + j;
 			n->m_bDrawn = false;
-			//push the new particle onto the vector
-			if (i == 19 && j % 2 == 0){
-				n->m_bPinned = true;
-			}
 			m_vecClothParticleVect.push_back(n);
+			if (i == m_usClothHeight - 1 && j % 3 == 0) n->m_bPinned = true;
 		}
 	}
-	SetUpSprings();
-	
-	
 
 	//Generating the buffers
 	glGenVertexArrays(1, &m_VAO);
+	glGenBuffers(1, &m_EBO);
+	glGenBuffers(1, &m_VBO);
+
+	SetupLinks();
 
 	//Binding the vertex array, this is the data that OGL uses to draw
-	glBindVertexArray(m_VAO);
+	UpdateVectors();
 
-	//Binding the VBO. This is the buffer that all the vertex data is 
-	//stored in, and used to send it to the VAO
-	glGenBuffers     (1, &m_VBO);
-	glBindBuffer     (GL_ARRAY_BUFFER, m_VBO);
-	glBufferData     (GL_ARRAY_BUFFER, sizeof(vec3) * m_vecVertVect.size(), &m_vecVertVect[0], GL_STATIC_DRAW);
-
-	//Generating EBO
-	glGenBuffers     (1, &m_EBO);
-	glBindBuffer     (GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-	glBufferData     (GL_ELEMENT_ARRAY_BUFFER, sizeof(vec3) * m_vecIndVect.size(), &m_vecIndVect[0], GL_STATIC_DRAW);
+	BindBuffers();
 
 	//Enabling the positional floats
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
@@ -140,7 +130,7 @@ void Cloth::Render() {
 	glDisable     (GL_BLEND);
 	glLineWidth   (2.0f);
 	glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_LINES, m_vecIndVect.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, m_vecIndices.size(), GL_UNSIGNED_INT, 0);
 	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 
 	glEnable      (GL_CULL_FACE);
@@ -149,72 +139,174 @@ void Cloth::Render() {
 }
 
 void Cloth::Update(float _deltaTime) {
-	m_vecVertVect.clear();
-	m_vecIndVect.clear();
+	
 
 	for (auto it : m_vecClothParticleVect) {
 		//Resetting all particles so that they can be drawn
-		it->m_bDrawn = false;
 		it->Update(_deltaTime);
 	}
 
-	//Binding the VBO. This is the buffer that all the vertex data is 
-	//stored in, and used to send it to the VAO
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * m_vecVertVect.size(), &m_vecVertVect[0], GL_STATIC_DRAW);
+	for (auto it : m_vecStructuralSprings){
+		it->ApplyForce(_deltaTime);
+	}
 
+	for (auto it : m_vecShearSprings){
+		it->ApplyForce(_deltaTime);
+	}
+
+	for (auto it : m_vecBendSprings){
+		it->ApplyForce(_deltaTime);
+	}
+
+
+
+	UpdateVectors();
+	BindBuffers();
+	//std::cout << glm::to_string(m_vecStructuralSprings[0]->m_pLinkedParticle0->GetVelocity()) << std::endl;
 }
 
-void Cloth::SetUpSprings()
+void Cloth::SetupLinks()
 {
 	/*------------------------------------------------------------------------------*/
 	/*Function to create the springs between particles.	Iterates through the entire */
 	/*particle vector and links up the particles in 3 sets of springs:				*/
-	/*	>Structural springs: These link horizontally/vertically aligned particles	*/
-	/*	>Shear springs: These are diagonally aligned particles.						*/
-	/*	>Bend springs:	These are horizontally/vertically aligned, but skip the most*/
-	/*					adjacent particles (linking the next one over)				*/
+	/*	>	Structural springs: These link horizontally/vertically aligned particles*/
+	/*	>	Shear springs     : These are diagonally aligned particles.				*/
+	/*	>	Bend springs      :	These are horizontally/vertically aligned, but skip */
+	/*							the most adjacent (links ever other particle)		*/
 	/*------------------------------------------------------------------------------*/
-	for (unsigned int row = 0; row < m_usClothHeight; ++row) {
-		for (unsigned int col = 0; col < m_usClothWidth; ++col) {
-			//Current particle
+	m_vecStructuralSprings.clear();
+	m_vecShearSprings.clear();
+	m_vecBendSprings.clear();
+
+	float k = -30.0;
+	float b = 3.0f;
+
+	//the structural links
+	//left & right structural springs
+	for (int row = 0; row < m_usClothHeight; ++row) {
+		for (int col = 0; col < m_usClothWidth - 1; ++col) {
 			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
-			
-			//Searching the 8 squares that surrounds the current square
-			for (int i = -1; i < 2; ++i) {
-
-				//checking if the currently iterated row is out of bounds
-				int f = row + i;
-				if (f < 0 || f > m_usClothWidth - 1) continue;
-				
-				for (int j = -1; j < 2; ++j) {
-					//checking if currently iterated col is out of bounds
-					f = col + j;
-					if (f < 0 || f > m_usClothHeight - 1) continue;
-
-					int index = (row + i) * m_usClothWidth + (col + j);
-
-					//checking if the particle being checked is itself
-					if (current == m_vecClothParticleVect[index]) continue;
-					 
-					
-					//if currently iterating through the diagonals, add links as shear springs
-					if (j == -1 || j == 1){
-						m_vecShearSprings.push_back(std::make_shared<Spring>(m_vecClothParticleVect[index], current));
-					}
-					//otherwise add structural springs
-					else{
-						m_vecStructuralSprings.push_back(std::make_shared<Spring>(m_vecClothParticleVect[index], current));
-					}
-				}
-			}
+			auto next = m_vecClothParticleVect[row * m_usClothWidth + col + 1];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecStructuralSprings.push_back(n);
+			n->SetConstants(k, b);
 		}
 	}
 
-	//resetting all particles to not drawn
-	for (auto it : m_vecClothParticleVect){
-		it->m_bDrawn = false;
+	//up & down structural springs
+	for (int row = 0; row < m_usClothHeight - 1; ++row) {
+		for (int col = 0; col < m_usClothWidth; ++col) {
+			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
+			auto next = m_vecClothParticleVect[(row + 1)* m_usClothWidth + col];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecStructuralSprings.push_back(n);
+			n->SetConstants(k, b);
+		}
 	}
+
+
+	//left & right shear springs 
+	for (int row = 0; row < m_usClothHeight - 1; ++row) {
+		for (int col = 0; col < m_usClothWidth - 1; ++col) {
+			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
+			auto next = m_vecClothParticleVect[(row + 1) * m_usClothWidth + (col + 1)];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecShearSprings.push_back(n);
+			n->SetConstants(k, b);
+		}
+	}
+
+	//up & down shear springs 
+	for (int row = 0; row < m_usClothHeight - 1; ++row) {
+		for (int col = 1; col < m_usClothWidth; ++col) {
+			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
+			auto next = m_vecClothParticleVect[(row + 1) * m_usClothWidth + (col - 1)];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecShearSprings.push_back(n);
+			n->SetConstants(k, b);
+
+		}
+	}
+
+	//left & right bend springs
+	for (int row = 0; row < m_usClothHeight; ++row) {
+		for (int col = 0; col < m_usClothWidth - 2; ++col) {
+			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
+			auto next = m_vecClothParticleVect[row * m_usClothWidth + (col + 2)];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecBendSprings.push_back(n);
+			n->SetConstants(k, b);
+		}
+	}
+
+	//up & down bend springs
+	for (int row = 0; row < m_usClothHeight - 2; ++row) {
+		for (int col = 0; col < m_usClothWidth; ++col) {
+			auto current = m_vecClothParticleVect[row * m_usClothWidth + col];
+			auto next = m_vecClothParticleVect[(row + 2) * m_usClothWidth + col];
+			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
+			m_vecBendSprings.push_back(n);
+			n->SetConstants(k, b);
+		}
+	}
+}
+
+void Cloth::BindBuffers(){
+	/*------------------------------------------------------------------------------*/
+	/*Convenience function to rebind both the VAO and the EBO at the same time, so  */
+	/*that it contains the correct links and the positions of particles.			*/
+	/*------------------------------------------------------------------------------*/
+
+	glBindVertexArray(m_VAO);
+
+	//Binding the VBO. This is the buffer that all the vertex data is 
+	//stored in, and used to send it to the VAO
+	glBindBuffer     (GL_ARRAY_BUFFER, m_VBO);
+	glBufferData     (GL_ARRAY_BUFFER, sizeof(vec3) * m_vecPositions.size(), m_vecPositions.data(), GL_DYNAMIC_DRAW);
+
+	//Binding the EBO
+	glBindBuffer     (GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+	glBufferData     (GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_vecIndices.size(), m_vecIndices.data(), GL_DYNAMIC_DRAW);
+}
+
+void Cloth::UpdateVectors(){
+	/*------------------------------------------------------------------------------*/
+	/*Convenience function to update all the vectors at the same time. Adds the		*/
+	/*positions and indices of the particles in the particle array to their			*/
+	/*respective vectors, and then calls BindBuffers() to bind them into the VBO/EBO*/
+	/*------------------------------------------------------------------------------*/
+
+	//Clearing the current vectors
+	m_vecPositions.clear();
+	m_vecIndices.clear();
+
+	//iterating through all particles and updating the position vector
+	for (auto it : m_vecClothParticleVect){
+		m_vecPositions.push_back(it->GetPos());
+	}
+
+	//iterating through structural spring array
+	for (auto it : m_vecStructuralSprings){
+		m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
+		m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
+	}
+
+	////iterating through shear spring array
+	//for (auto it : m_vecShearSprings){
+	//	m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
+	//	m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
+	//}
+
+	////iterating through bend spring array
+	//for (auto it : m_vecBendSprings){
+	//	m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
+	//	m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
+	//}
+	
+	m_vecIndices.shrink_to_fit();
+
+	BindBuffers();
 }
 
 void Cloth::SolveConstraints()

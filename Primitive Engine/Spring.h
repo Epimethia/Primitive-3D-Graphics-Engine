@@ -7,9 +7,9 @@ class Spring {
 public:
 	Spring();
 	~Spring();
-	Spring(std::shared_ptr<ClothParticle> _p0, std::shared_ptr<ClothParticle> _p1, float _fK = 0.5f, float _fB = 0.9f);
+	Spring(std::shared_ptr<ClothParticle> _p0, std::shared_ptr<ClothParticle> _p1, float _fK = -80.0f, float _fB = 1.0f);
 	void SetConstants(float _fK, float _fB);
-	void ApplyForce(float _dt);
+	void ApplyForce(float _deltaTime);
 	std::shared_ptr<ClothParticle> m_pLinkedParticle0;
 	std::shared_ptr<ClothParticle> m_pLinkedParticle1;
 	

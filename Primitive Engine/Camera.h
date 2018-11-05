@@ -23,5 +23,5 @@ private:
 	static glm::mat4 View, Projection;
 	static glm::mat4 VPMat;
 	static glm::vec3 CameraPos;
-	static glm::vec3 Front, Up, Right;
+	static glm::vec3 Front, Up, Right, Target;
 };

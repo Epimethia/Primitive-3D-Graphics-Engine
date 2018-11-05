@@ -13,14 +13,16 @@ public:
 	void Update(float _deltaTime);
 
 private:
-	void SetUpSprings();
+	void SetupLinks();
+	void BindBuffers();
+	void UpdateVectors();
 	void SolveConstraints();
 
 	unsigned short                              m_usClothWidth;
 	unsigned short                              m_usClothHeight;
 	std::vector<std::shared_ptr<ClothParticle>> m_vecClothParticleVect;
-	std::vector<glm::vec3>                      m_vecVertVect;
-	std::vector<GLuint>                         m_vecIndVect;
+	std::vector<glm::vec3>                      m_vecPositions;
+	std::vector<GLuint>                         m_vecIndices;
 
 	std::vector<std::shared_ptr<Spring>>        m_vecStructuralSprings;
 	std::vector<std::shared_ptr<Spring>>        m_vecShearSprings;

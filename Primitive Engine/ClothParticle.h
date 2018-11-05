@@ -20,13 +20,13 @@ public:
 	//setters and getters
 	vec3 GetPos()     { return m_v3CurrentPos; };
 	vec3 GetVelocity(){ return m_v3Velocity; };
+	float InvMass();
 
 	bool m_bPinned;
 	bool m_bDrawn = false;
 	int  m_iD;
 
 private:
-	float InvMass();
 
 	vec3  m_v3CurrentPos;
 	vec3  m_v3PrevPos;

@@ -11,7 +11,7 @@ enum KEYSTATE {
 class InputManager {
 public:
 	InputManager();
-	static void ProcessKeyInput();
+	static void ProcessInputs();
 	static void Init();
 
 	static unsigned char KeyArray[255];
@@ -22,4 +22,11 @@ private:
 	static void NormKeyUp(unsigned char key, int x, int y);
 	static void SpecialKeyDown(int key, int x, int y);
 	static void SpecialKeyUp(int key, int x, int y);
+	
+	static void ProcessMouseButtons(int button, int state, int x, int y);
+	static void ProcessMouseMovement(int x, int y);
+	static void ProcessMousePassiveMovement(int x, int y);
+
+	float lastX;
+	float lastY;
 };

@@ -28,7 +28,7 @@ ClothParticle::ClothParticle(glm::vec3 _Pos)
 	m_v3CurrentPos = _Pos;
 	m_v3Velocity   = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_bPinned      = false;
-	m_fMass        = 1.0f;
+	m_fMass        = 0.2f;
 }
 
 ClothParticle::~ClothParticle()
@@ -49,9 +49,19 @@ void ClothParticle::Update(float _deltaTime)
 	//if the particle is not pinned
 	if (!m_bPinned) {
 		float deltaSquared = _deltaTime * _deltaTime;
-		m_v3Velocity       = m_v3CurrentPos - m_v3PrevPos;
+		m_v3Velocity       = (m_v3CurrentPos - m_v3PrevPos) * 0.9f;
+		
+		vec3 acceleration = m_v3Forces * InvMass();
 		m_v3PrevPos        = m_v3CurrentPos;
-		m_v3CurrentPos    += m_v3Velocity + m_v3Forces * deltaSquared;
+		m_v3CurrentPos    += m_v3Velocity + acceleration * deltaSquared;
+		 
+		/*if ((m_v3CurrentPos).y < -30.0f) {
+			m_v3CurrentPos.y = -30.0f;
+			m_v3PrevPos = m_v3CurrentPos;
+			return;
+		}*/
+
+		m_v3Forces = glm::vec3();
 	}
 }
 
@@ -61,7 +71,7 @@ void ClothParticle::AddImpulse(const vec3 _v3ImpulseForce)
 	/*Takes a vec3 and applies it to the internal velocity vector. This provides an	*/
 	/*increase in velocity whenever the function is called. Returns nothing.		*/
 	/*------------------------------------------------------------------------------*/
-	m_v3Velocity += _v3ImpulseForce * InvMass();
+	m_v3Forces += _v3ImpulseForce;
 }
 
 void ClothParticle::SetMass(const float _mass){
@@ -76,14 +86,14 @@ void ClothParticle::SetMass(const float _mass){
 }
 
 void ClothParticle::ApplyForces(){
-	m_v3Forces = UTILS::Gravity;
+	m_v3Forces += UTILS::Gravity;
 }
 
 float ClothParticle::InvMass(){
 	/*------------------------------------------------------------------------------*/
 	/*Function to return the inverse of the particle's mass. Due to the fact that	*/
 	/*the mass of a particle can be zero, having this check prevents values such as */
-	/*NaN in calculations, causing the physics to break. Uses a ternary operator.	*/
+	/*NaN in calculations, causing the phy	sics to break. Uses a ternary operator.	*/
 	/*------------------------------------------------------------------------------*/
 	return m_fMass == 0.0f ?  0.0f : 1.0f / m_fMass;
 }
