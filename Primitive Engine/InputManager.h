@@ -16,6 +16,9 @@ public:
 
 	static unsigned char KeyArray[255];
 	static unsigned char KeySpecialArray[255];
+	static unsigned int MouseButtonArray[3];
+	static glm::vec2 v2MouseLastPos;
+	static glm::vec2 v2MouseCurrentPos;
 
 private:	
 	static void NormKeyDown(unsigned char key, int x, int y);
@@ -25,8 +28,6 @@ private:
 	
 	static void ProcessMouseButtons(int button, int state, int x, int y);
 	static void ProcessMouseMovement(int x, int y);
-	static void ProcessMousePassiveMovement(int x, int y);
 
-	float lastX;
-	float lastY;
+
 };

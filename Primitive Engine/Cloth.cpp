@@ -6,11 +6,11 @@
 #include "libs/glm/gtx/string_cast.hpp"
 Cloth::Cloth()
 {
-	m_v3ObjPos      = glm::vec3(-0.5f, 0.0f, -100.0f);
+	m_v3ObjPos      = glm::vec3(0.0f, 0.0f, -100.0f);
 	m_v3ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	m_usClothWidth  = 20;
-	m_usClothHeight = 20;
+	m_usClothWidth  = 30;
+	m_usClothHeight = 30;
 
 }
 
@@ -22,17 +22,19 @@ Cloth::~Cloth()
 void Cloth::Init() {
 	float XSeparation = 1.0f / (static_cast<float>(m_usClothWidth - 1)) * 100.0f;
 	float YSeparation = 1.0f / (static_cast<float>(m_usClothHeight - 1)) * 100.0f;
-
+	float z = 0.0f;
+	float x = m_v3ObjPos.x - (XSeparation * (m_usClothWidth / 2.0f));
 	for (unsigned int i = 0; i < m_usClothHeight; i++) {
 		for (unsigned int j = 0; j < m_usClothWidth; j++) {
 			//Creating a new particle
-			vec3 Pos = vec3(-1.0f + (XSeparation * j) , -1.0f + (YSeparation * i), 0.0f) + m_v3ObjPos;
+			vec3 Pos = vec3(x + (XSeparation * j) , (YSeparation * i), z) + m_v3ObjPos;
 			auto n = std::make_shared<ClothParticle>(Pos);
 			n->m_iD = (i* m_usClothHeight) + j;
 			n->m_bDrawn = false;
 			m_vecClothParticleVect.push_back(n);
-			if (i == m_usClothHeight - 1 && j % 3 == 0) n->m_bPinned = true;
+			if (i == m_usClothHeight - 1 && j % 9 == 1) n->m_bPinned = true;
 		}
+		z += 1.0f;
 	}
 
 	//Generating the buffers
@@ -142,10 +144,6 @@ void Cloth::Update(float _deltaTime) {
 	/*Function that iterates through all the springs, calling each spring's update	*/
 	/*function in succession.														*/
 	/*------------------------------------------------------------------------------*/
-	for (auto it : m_vecClothParticleVect) {
-		it->Update(_deltaTime);
-	}
-
 	for (auto it : m_vecStructuralSprings){
 		it->ApplyForce(_deltaTime);
 	}
@@ -157,6 +155,11 @@ void Cloth::Update(float _deltaTime) {
 	for (auto it : m_vecBendSprings){
 		it->ApplyForce(_deltaTime);
 	}
+	for (auto it : m_vecClothParticleVect) {
+		it->Update(_deltaTime);
+	}
+
+	
 
 
 	UpdateVectors();
@@ -171,14 +174,14 @@ void Cloth::SetupLinks()
 	/*	>	Structural springs: These link horizontally/vertically aligned particles*/
 	/*	>	Shear springs     : These are diagonally aligned particles.				*/
 	/*	>	Bend springs      :	These are horizontally/vertically aligned, but skip */
-	/*							the most adjacent (links ever other particle)		*/
+	/*							the most adjacent (links every other particle)		*/
 	/*------------------------------------------------------------------------------*/
 	m_vecStructuralSprings.clear();
 	m_vecShearSprings.clear();
 	m_vecBendSprings.clear();
 
-	float k = -30.0;
-	float b = 3.0f;
+	float k = -20.0;
+	float b = 0.9f;
 
 	//the structural links
 	//left & right structural springs
@@ -234,7 +237,8 @@ void Cloth::SetupLinks()
 			auto next = m_vecClothParticleVect[row * m_usClothWidth + (col + 2)];
 			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
 			m_vecBendSprings.push_back(n);
-			n->SetConstants(k, b);
+			n->SetConstants(k / 4.0f, b);
+
 		}
 	}
 
@@ -245,7 +249,7 @@ void Cloth::SetupLinks()
 			auto next = m_vecClothParticleVect[(row + 2) * m_usClothWidth + col];
 			std::shared_ptr<Spring> n = std::make_shared<Spring>(current, next);
 			m_vecBendSprings.push_back(n);
-			n->SetConstants(k, b);
+			n->SetConstants(k / 4.0f, b);
 		}
 	}
 }
@@ -295,7 +299,18 @@ void Cloth::UpdateVectors(){
 	BindBuffers();
 }
 
-void Cloth::SolveConstraints()
-{
+void Cloth::ApplyForce(glm::vec3 _ForceLocation, glm::vec3 _Force, float  _ForceRadius) {
+	for (auto it : m_vecClothParticleVect){
+		glm::vec3 dist = it->GetPos() - _ForceLocation;
+		//ignoring the z value for now
+		dist.z = 0.0f;
 
+		//finding the distance from the force location to the particle
+		float len = glm::length(dist);
+		if (len > _ForceRadius) continue;
+		
+		//otherwise, apply the force to the particle
+		float multi = len / _ForceRadius;
+		it->AddImpulse(_Force * multi);
+	}
 }

@@ -1,14 +1,14 @@
-#include "PlayerObject.h"
+#include "Pawn.h"
 #include "EntityManager.h"
 
-PlayerObject::PlayerObject(){}
+Pawn::Pawn(){}
 
-PlayerObject::~PlayerObject(){}
+Pawn::~Pawn(){}
 
-void PlayerObject::Init(glm::vec3 _Pos){
+void Pawn::Init(glm::vec3 _Pos){
 	//Player object is a sphere
 	ObjPos = _Pos;
-	ObjScale = glm::vec3(0.005f, 0.005f, 0.005f);
+	ObjScale = glm::vec3(10.0f, 10.0f, 10.0f);
 	ObjRotation = glm::vec3();
 	VAO = EntityManager::GetMesh(SPHERE_ENTITY)->VAO;
 	NumIndices = EntityManager::GetMesh(SPHERE_ENTITY)->NumIndices;
@@ -16,11 +16,11 @@ void PlayerObject::Init(glm::vec3 _Pos){
 	Shader = EntityManager::GetMesh(SPHERE_ENTITY)->Shader;
 }
 
-void PlayerObject::Process(float _gDeltaTime){
+void Pawn::Process(float _gDeltaTime){
 
 }
 
-void PlayerObject::Render(){
+void Pawn::Render(){
 	glUseProgram(Shader);
 
 	//Binding the array
@@ -71,7 +71,7 @@ void PlayerObject::Render(){
 	//Setting back face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glFrontFace(GL_CW);
 
 	glDrawElements(GL_TRIANGLES, static_cast<GLuint>(NumIndices), GL_UNSIGNED_INT, 0);
 

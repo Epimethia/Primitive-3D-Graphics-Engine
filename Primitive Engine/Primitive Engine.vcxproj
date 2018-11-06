@@ -139,7 +139,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="PlayerObject.cpp" />
+    <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Spring.cpp" />
@@ -161,7 +161,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="Pawn.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Spring.h" />

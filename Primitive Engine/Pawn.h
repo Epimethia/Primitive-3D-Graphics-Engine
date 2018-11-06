@@ -1,10 +1,10 @@
 #pragma once
 #include "Resource.h"
 
-class PlayerObject{
+class Pawn{
 public:
-	PlayerObject();
-	~PlayerObject();
+	Pawn();
+	~Pawn();
 
 	void Init(glm::vec3 _Pos);
 	void Process(float _gDeltaTime);

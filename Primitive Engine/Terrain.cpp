@@ -354,8 +354,8 @@ void Terrain::EstimateNormals(){
 			float l = HeightMapData[i * GridSize + j - 1];
 			float r = HeightMapData[i * GridSize + j + 1];
 
-			glm::vec3 tanZ(0.0f, (t - b)*invTwoDZ, 1.0f);
-			glm::vec3 tanX(1.0f, (r - l)*invTwoDX, 0.0f);
+			glm::vec3 tanZ(0.0f, (t - b) * invTwoDZ, 1.0f);
+			glm::vec3 tanX(1.0f, (r - l) * invTwoDX, 0.0f);
 
 			glm::vec3 N = glm::cross(tanZ, tanX);
 			glm::normalize(N);

@@ -16,6 +16,7 @@ public:
 	static void Process();
 	static int XRot;
 	static int YRot;
+	static glm::vec3 LookDir;
 
 private:
 	Camera();

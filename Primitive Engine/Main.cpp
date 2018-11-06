@@ -8,6 +8,7 @@
 #include "Text.h"
 #include "ParticleSystem.h"
 #include "Cloth.h"
+#include "Pawn.h"
 
 float g_DeltaTime = 0.0f;
 
@@ -16,9 +17,10 @@ Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
 std::shared_ptr<Cloth> cl;
+std::shared_ptr<Pawn> po;
+float fanSpeed = 1.0f;
 
 void ProcessInput();
-
 
 /*Initializing the entire program. This function gets called in glutInit()*/
 /*This turns on backface culling and the depth test (useful for some other*/
@@ -33,8 +35,15 @@ void Initialize() {
 	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
 	InputManager::Init();
 	
+	//the cloth
 	cl = std::make_shared<Cloth>();
 	cl->Init();
+
+	//the sphere
+	po = std::make_shared<Pawn>();
+	po->Init(glm::vec3(0.0f, 0.0f, -220.0f));
+
+
 
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
@@ -54,6 +63,7 @@ void Render(void) {
 	tx1->Render();
 	tx2->Render();
 	cl->Render();
+	po->Render();
 	fb->Render();
 	//-----------------//
 
@@ -74,6 +84,9 @@ void Process(void) {
 	fb->dt += g_DeltaTime;
 	Camera::Process();
 	cl->Update(g_DeltaTime);
+	po->Process(g_DeltaTime);
+	cl->ApplyForce(po->ObjPos, glm::vec3(0.0f, 0.0f, 20.0f), 20.0f);
+
 	//------------------------//
 	glutPostRedisplay();
 }
@@ -128,29 +141,40 @@ int main(int argc, char **argv) {
 void ProcessInput(){
 	float speed = 30.0f;
 
-	auto CameraPos = &Camera::GetPos();
+	auto CameraFront = glm::normalize(Camera::GetFront());
+	auto CameraRight = glm::normalize(Camera::GetRight());
+	auto CameraUp = glm::normalize(Camera::GetUp());
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		CameraPos->z -= speed * g_DeltaTime;
+		Camera::GetPos() -= (CameraFront * speed * g_DeltaTime);
 	}
 	if (InputManager::KeyArray['s'] == KEY_HELD) {
-		CameraPos->z += speed * g_DeltaTime;
+		Camera::GetPos() += (CameraFront * speed * g_DeltaTime);
 	}
 	if (InputManager::KeyArray['a'] == KEY_HELD) {
-		CameraPos->x -= speed * g_DeltaTime;
+		Camera::GetPos() -= (CameraRight * speed * g_DeltaTime);
 	}
 	if (InputManager::KeyArray['d'] == KEY_HELD) {
-		CameraPos->x += speed * g_DeltaTime;
+		Camera::GetPos() += (CameraRight * speed * g_DeltaTime);
 	}
 	if (InputManager::KeyArray[32] == KEY_HELD) {
-		CameraPos->y += speed * g_DeltaTime;
+		Camera::GetPos().y += speed * g_DeltaTime;
 	}
-	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
-		CameraPos->y -= speed * g_DeltaTime;
+	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD){
+		Camera::GetPos().y -= speed * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
-		
+	if (InputManager::KeyArray['o'] == KEY_HELD) {
+		po->ObjPos -= glm::vec3(0.0f, 30.0f, 0.0f) * g_DeltaTime;
 	}
-
+	if (InputManager::KeyArray['p'] == KEY_HELD) {
+		po->ObjPos += glm::vec3(0.0f, 30.0f, 0.0f) * g_DeltaTime;
+	}
+	if (InputManager::MouseButtonArray[0] == KEY_HELD){
+		glm::vec2 dis = InputManager::v2MouseLastPos - InputManager::v2MouseCurrentPos;
+		float xDif = (dis.x / UTILS::WindowWidth) * 100.0f * Clock::GetDeltaTime();
+		float yDif = (-dis.y / UTILS::WindowHeight) * 100.0f * Clock::GetDeltaTime();
+		Camera::LookDir = glm::vec3(xDif, yDif, 0.0f);
+		InputManager::v2MouseLastPos = InputManager::v2MouseCurrentPos;
+	}
 	InputManager::ProcessInputs();
 }
 

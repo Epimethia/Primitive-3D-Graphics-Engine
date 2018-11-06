@@ -11,12 +11,12 @@ public:
 	void Init();
 	void Render();
 	void Update(float _deltaTime);
+	void ApplyForce(glm::vec3 _ForceLocation, glm::vec3 _Force, float _ForceRadius);
 
 private:
 	void SetupLinks();
 	void BindBuffers();
 	void UpdateVectors();
-	void SolveConstraints();
 
 	unsigned short                              m_usClothWidth;
 	unsigned short                              m_usClothHeight;

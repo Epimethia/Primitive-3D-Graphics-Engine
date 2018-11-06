@@ -103,9 +103,6 @@
     <ClCompile Include="GeometryModel.cpp">
       <Filter>Source Files\GeometryModel</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerObject.cpp">
-      <Filter>Source Files\PlayerObject</Filter>
-    </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>Source Files\Terrain</Filter>
     </ClCompile>
@@ -123,6 +120,9 @@
     </ClCompile>
     <ClCompile Include="Spring.cpp">
       <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Source Files\PlayerObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -174,9 +174,6 @@
     <ClInclude Include="GeometryModel.h">
       <Filter>Source Files\GeometryModel</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerObject.h">
-      <Filter>Source Files\PlayerObject</Filter>
-    </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>Source Files\Terrain</Filter>
     </ClInclude>
@@ -194,6 +191,9 @@
     </ClInclude>
     <ClInclude Include="Spring.h">
       <Filter>Source Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Source Files\PlayerObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -36,7 +36,7 @@ void main() {
     float spec = pow(max(dot(negviewdir , reflectdir), 0.0f), shininess);
     vec3 specular = lightSpecStr * spec * lightColor;
 
-    color = vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord);
+    color = texture(tex, fragTexCoord);//vec4(ambient + diffuse + specular, 1.0f) * texture(tex, fragTexCoord);
 
     // float d = distance(mWorldPos.xyz, camPos);
     // float lerp = (d - 1.0f)/10.0f;
