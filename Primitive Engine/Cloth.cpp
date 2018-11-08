@@ -159,9 +159,6 @@ void Cloth::Update(float _deltaTime) {
 		it->Update(_deltaTime);
 	}
 
-	
-
-
 	UpdateVectors();
 	BindBuffers();
 }
@@ -180,8 +177,8 @@ void Cloth::SetupLinks()
 	m_vecShearSprings.clear();
 	m_vecBendSprings.clear();
 
-	float k = -20.0;
-	float b = 0.9f;
+	float k = -15.0;
+	float b = 0.0f;
 
 	//the structural links
 	//left & right structural springs

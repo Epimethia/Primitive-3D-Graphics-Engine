@@ -9,6 +9,7 @@
 #include "ParticleSystem.h"
 #include "Cloth.h"
 #include "Pawn.h"
+#include "ClothParticle.h"
 
 float g_DeltaTime = 0.0f;
 
@@ -18,7 +19,9 @@ Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
 std::shared_ptr<Cloth> cl;
 std::shared_ptr<Pawn> po;
+std::shared_ptr<ClothParticle> HeldParticle;
 float fanSpeed = 1.0f;
+float DistToParticle;
 
 void ProcessInput();
 
@@ -175,6 +178,34 @@ void ProcessInput(){
 		Camera::LookDir = glm::vec3(xDif, yDif, 0.0f);
 		InputManager::v2MouseLastPos = InputManager::v2MouseCurrentPos;
 	}
+
+	if (InputManager::MouseButtonArray[1] == KEY_HELD && HeldParticle == nullptr){
+		glm::vec3 rayDir = InputManager::Raycast();
+		float radius = 0.5f;
+
+		for (auto it : cl->m_vecClothParticleVect){
+			glm::vec3 v = it->GetPos() - Camera::GetPos();
+			float a = glm::dot(rayDir, rayDir);
+			float b = 2 * glm::dot(v, rayDir);
+			float c = glm::dot(v, v) - radius * radius;
+			float d = b * b - 4 * a* c;
+			if (d > 0){
+				HeldParticle = it;
+				DistToParticle = glm::length(v);
+				break;
+			}
+		}
+	}
+
+	else if (HeldParticle && InputManager::MouseButtonArray[1] == KEY_RELEASED){
+		HeldParticle.reset();
+		DistToParticle = 0.0f;
+	}
+	else if (HeldParticle && InputManager::MouseButtonArray[1] == KEY_HELD){
+		glm::vec3 rayDir = InputManager::Raycast();
+		HeldParticle->GetPos() = (rayDir * DistToParticle) + Camera::GetPos();
+	}
+	
 	InputManager::ProcessInputs();
 }
 

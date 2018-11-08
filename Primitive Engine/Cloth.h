@@ -12,6 +12,7 @@ public:
 	void Render();
 	void Update(float _deltaTime);
 	void ApplyForce(glm::vec3 _ForceLocation, glm::vec3 _Force, float _ForceRadius);
+	std::vector<std::shared_ptr<ClothParticle>> m_vecClothParticleVect;
 
 private:
 	void SetupLinks();
@@ -20,7 +21,7 @@ private:
 
 	unsigned short                              m_usClothWidth;
 	unsigned short                              m_usClothHeight;
-	std::vector<std::shared_ptr<ClothParticle>> m_vecClothParticleVect;
+	
 	std::vector<glm::vec3>                      m_vecPositions;
 	std::vector<GLuint>                         m_vecIndices;
 

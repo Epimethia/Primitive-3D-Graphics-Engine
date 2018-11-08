@@ -7,6 +7,8 @@ unsigned char InputManager::KeySpecialArray[255];
 unsigned int InputManager::MouseButtonArray[3];
 glm::vec2 InputManager::v2MouseLastPos = {0.0f, 0.0f};
 glm::vec2 InputManager::v2MouseCurrentPos = {0.0f, 0.0f};
+glm::vec2 InputManager::NDCMouseCoords = {0.0f, 0.0f};
+
 
 
 InputManager::InputManager() {
@@ -51,6 +53,27 @@ void InputManager::Init(){
 	}
 }
 
+glm::vec3 InputManager::Raycast() {
+	//screen pos to Proj Space
+	glm::vec4 clipCoords = glm::vec4(NDCMouseCoords, -1.0f, 1.0f);
+
+	//proj to eye space
+	glm::mat4 invProjMat = glm::inverse(Camera::GetProjMatrix());
+	glm::vec4 eyeCoords = invProjMat * clipCoords;
+	eyeCoords = glm::vec4(
+		eyeCoords.x,
+		eyeCoords.y,
+		-1.0f,
+		.0f
+	);
+
+	//eyespace to world space
+	glm::mat4 invViewMatrix = glm::inverse(Camera::GetViewMatrix());
+	glm::vec4 rayWorld = invViewMatrix * eyeCoords;
+	glm::vec3 rayDir = glm::normalize(glm::vec3(rayWorld));
+	return rayDir;
+}
+
 void InputManager::NormKeyDown(unsigned char key, int x, int y) {
 	KeyArray[key] = KEY_FIRST_PRESS;
 }
@@ -89,5 +112,9 @@ void InputManager::ProcessMouseButtons(int button, int state, int x, int y){
 
 void InputManager::ProcessMouseMovement(int x, int y){
 	v2MouseCurrentPos = {x, y};
+	NDCMouseCoords = {
+		(2.0f * x) / UTILS::WindowWidth - 1.0f,
+		1.0f - (2.0f * y) / UTILS::WindowHeight
+	};
 }
 

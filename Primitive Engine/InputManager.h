@@ -19,6 +19,8 @@ public:
 	static unsigned int MouseButtonArray[3];
 	static glm::vec2 v2MouseLastPos;
 	static glm::vec2 v2MouseCurrentPos;
+	static glm::vec2 NDCMouseCoords;
+	static glm::vec3 Raycast();
 
 private:	
 	static void NormKeyDown(unsigned char key, int x, int y);

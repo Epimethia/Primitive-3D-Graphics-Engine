@@ -8,7 +8,9 @@ public:
 	~Camera();
 	static std::shared_ptr<Camera> GetInstance();
 	static void DestroyInstance();
-	static glm::mat4 GetVPMatrix();
+	static glm::mat4 GetVPMatrix(){ return VPMat; };
+	static glm::mat4 GetProjMatrix(){ return Projection; };
+	static glm::mat4 GetViewMatrix(){ return View; };
 	static glm::vec3& GetPos() { return CameraPos; };
 	static glm::vec3 GetFront() { return Front; };
 	static glm::vec3 GetUp() { return Up; };

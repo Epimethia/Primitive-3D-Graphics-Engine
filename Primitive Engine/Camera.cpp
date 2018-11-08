@@ -26,11 +26,11 @@ std::shared_ptr<Camera> Camera::GetInstance() {
 	
 	Front = glm::normalize(CameraPos - (Target + LookDir));
 	glm::vec3 tempUp = { 0.0f, 1.0f, 0.0f };
-	glm::vec3 Right = glm::normalize(glm::cross(tempUp, Front));
+	Right = glm::normalize(glm::cross(tempUp, Front));
 	Up = glm::cross(Front, Right);
 
 	View = glm::lookAt(CameraPos, CameraPos - Front, Up);
-	Projection = glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 20000.0f);
+	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth / UTILS::WindowHeight), 0.1f, 20000.0f);
 	VPMat = Projection * View;
 
 	return CameraPtr;
@@ -39,10 +39,6 @@ std::shared_ptr<Camera> Camera::GetInstance() {
 void Camera::DestroyInstance() {
 	CameraPtr = nullptr;
 	std::cout << "Camera Destroyed\n";
-}
-
-glm::mat4 Camera::GetVPMatrix() {
-	return VPMat;
 }
 
 void Camera::Process(){
@@ -54,7 +50,7 @@ void Camera::Process(){
 	Up = glm::normalize(glm::cross(Front, Right));
 
 	View = glm::lookAt(CameraPos, CameraPos - Front, Up);
-	Projection = glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 20000.0f);
+	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth / UTILS::WindowHeight), 0.1f, 20000.0f);
 	VPMat = Projection * View;
 	LookDir = glm::vec3();
 }

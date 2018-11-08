@@ -47,11 +47,11 @@ void ClothParticle::Update(float _deltaTime){
 	//if the particle is not pinned
 	if (!m_bPinned){
 		float deltaSquared   = _deltaTime;
-		m_v3Velocity         = (m_v3CurrentPos - m_v3PrevPos) * 0.95f;
+		m_v3Velocity         = (m_v3CurrentPos - m_v3PrevPos);
 
 		vec3 acceleration    = m_v3Forces * InvMass();
 		m_v3PrevPos          = m_v3CurrentPos;
-		m_v3CurrentPos       = m_v3CurrentPos + (m_v3Velocity + acceleration * deltaSquared);
+		m_v3CurrentPos       = m_v3CurrentPos + (m_v3Velocity + acceleration * deltaSquared) * 0.87f;
 
 		if ((m_v3CurrentPos.y < -50.0f)){
 			//setting the particle to its lower limit

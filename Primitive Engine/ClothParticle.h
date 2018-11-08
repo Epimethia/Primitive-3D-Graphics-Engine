@@ -18,7 +18,7 @@ public:
 	void ApplyForces();
 	
 	//setters and getters
-	vec3 GetPos()     { return m_v3CurrentPos; };
+	vec3& GetPos()     { return m_v3CurrentPos; };
 	vec3 GetVelocity(){ return m_v3Velocity; };
 	float InvMass();
 
