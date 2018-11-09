@@ -30,7 +30,7 @@ std::shared_ptr<Camera> Camera::GetInstance() {
 	Up = glm::cross(Front, Right);
 
 	View = glm::lookAt(CameraPos, CameraPos - Front, Up);
-	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth / UTILS::WindowHeight), 0.1f, 20000.0f);
+	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth) / static_cast<float>(UTILS::WindowHeight), 0.1f, 20000.0f);
 	VPMat = Projection * View;
 
 	return CameraPtr;
@@ -50,7 +50,7 @@ void Camera::Process(){
 	Up = glm::normalize(glm::cross(Front, Right));
 
 	View = glm::lookAt(CameraPos, CameraPos - Front, Up);
-	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth / UTILS::WindowHeight), 0.1f, 20000.0f);
+	Projection = glm::perspective(45.0f, static_cast<float>(UTILS::WindowWidth) / static_cast<float>(UTILS::WindowHeight), 0.1f, 20000.0f);
 	VPMat = Projection * View;
 	LookDir = glm::vec3();
 }

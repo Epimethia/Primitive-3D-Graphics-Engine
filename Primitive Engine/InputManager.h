@@ -20,7 +20,8 @@ public:
 	static glm::vec2 v2MouseLastPos;
 	static glm::vec2 v2MouseCurrentPos;
 	static glm::vec2 NDCMouseCoords;
-	static glm::vec3 Raycast();
+	static glm::vec3 MouseDir;
+	static bool PickObject(glm::vec3 _ObjPos);
 
 private:	
 	static void NormKeyDown(unsigned char key, int x, int y);

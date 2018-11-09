@@ -41,16 +41,24 @@ void Spring::ApplyForce(float _deltaTime){
 	/*resting length, stored as m_fRestingDistance. Acts with input parameter delta */
 	/*time, _dt.																	*/
 	/*------------------------------------------------------------------------------*/
-	vec3 relativePos = m_pLinkedParticle1->GetPos() - m_pLinkedParticle0->GetPos();
-	vec3 relativeVel = m_pLinkedParticle1->GetVelocity() - m_pLinkedParticle0->GetVelocity();
 
-	float x = glm::length(relativePos) - m_fRestDistance;
-	float v = glm::length(relativeVel);
-	//Hooke's law
-	float F = (-m_fK * x) + (-m_fB * v);
+	if (!m_bBroken) {
+		vec3 relativePos = m_pLinkedParticle1->GetPos() - m_pLinkedParticle0->GetPos();
+		vec3 relativeVel = m_pLinkedParticle1->GetVelocity() - m_pLinkedParticle0->GetVelocity();
 
-	//Applying the restorative force to each particle
-	vec3 Impulse = glm::normalize(relativePos) * F;
-	m_pLinkedParticle0->AddImpulse(Impulse);
-	m_pLinkedParticle1->AddImpulse(Impulse * -1.0f);
+		//if the spring is more than 50% longer than its rest length, break
+		if (glm::length(relativePos) / m_fRestDistance >= 6.0f) {
+			m_bBroken = true;
+		}
+
+		float x = glm::length(relativePos) - m_fRestDistance;
+		float v = glm::length(relativeVel);
+		//Hooke's law
+		float F = (-m_fK * x) + (-m_fB * v);
+
+		//Applying the restorative force to each particle
+		vec3 Impulse = glm::normalize(relativePos) * F;
+		m_pLinkedParticle0->AddImpulse(Impulse);
+		m_pLinkedParticle1->AddImpulse(Impulse * -1.0f);
+	}
 }

@@ -12,10 +12,11 @@ public:
 	void ApplyForce(float _deltaTime);
 	std::shared_ptr<ClothParticle> m_pLinkedParticle0;
 	std::shared_ptr<ClothParticle> m_pLinkedParticle1;
-	
+	bool m_bBroken = false;
+	float m_fRestDistance;
 
 private:
-	float m_fRestDistance;
+	
 	float m_fK;
 	float m_fB;
 };

@@ -26,7 +26,7 @@ ClothParticle::ClothParticle(glm::vec3 _Pos){
 	m_v3CurrentPos = _Pos;
 	m_v3Velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_bPinned = false;
-	m_fMass = 1.0f;
+	m_fMass = 0.04f;
 }
 
 ClothParticle::~ClothParticle(){
@@ -45,21 +45,24 @@ void ClothParticle::Update(float _deltaTime){
 	ApplyForces();
 
 	//if the particle is not pinned
-	if (!m_bPinned){
-		float deltaSquared   = _deltaTime;
-		m_v3Velocity         = (m_v3CurrentPos - m_v3PrevPos);
+	float deltaSquared = _deltaTime * _deltaTime;
+	m_v3Velocity = (m_v3CurrentPos - m_v3PrevPos);
 
-		vec3 acceleration    = m_v3Forces * InvMass();
-		m_v3PrevPos          = m_v3CurrentPos;
-		m_v3CurrentPos       = m_v3CurrentPos + (m_v3Velocity + acceleration * deltaSquared) * 0.87f;
-
-		if ((m_v3CurrentPos.y < -50.0f)){
-			//setting the particle to its lower limit
-			m_v3CurrentPos.y = -50.0f;
-			m_v3PrevPos.y    = m_v3CurrentPos.y + (m_v3Velocity.y * 0.1f);
-		}
-		m_v3Forces = glm::vec3();
+	vec3 acceleration = m_v3Forces * InvMass();
+	if (m_bPinned) {
+		acceleration *= glm::vec3(1.0f, 0.0f, 0.0f);
+		m_v3Velocity *= glm::vec3(1.0f, 0.0f, 0.0f);
 	}
+	m_v3PrevPos = m_v3CurrentPos;
+	m_v3CurrentPos = m_v3CurrentPos + (m_v3Velocity + acceleration * deltaSquared) * 0.95f;	//dampening
+
+	if ((m_v3CurrentPos.y < -70.0f)) {
+		//setting the particle to its lower limit
+		m_v3CurrentPos.y = -70.0f;
+		m_v3PrevPos.y = m_v3CurrentPos.y + (m_v3Velocity.y * 0.1f);
+	}
+	m_v3Forces = glm::vec3();
+	
 }
 
 void ClothParticle::AddImpulse(const vec3 _v3ImpulseForce){

@@ -14,14 +14,25 @@ Cloth::Cloth()
 
 }
 
+Cloth::Cloth(int width)
+{
+	m_v3ObjPos = glm::vec3(0.0f, 0.0f, -100.0f);
+	m_v3ObjRotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	m_usClothWidth = width;
+	m_usClothHeight = width;
+}
+
 Cloth::~Cloth()
 {
-
+	m_vecStructuralSprings.clear();
+	m_vecShearSprings.clear();
+	m_vecBendSprings.clear();
 }
 
 void Cloth::Init() {
-	float XSeparation = 1.0f / (static_cast<float>(m_usClothWidth - 1)) * 100.0f;
-	float YSeparation = 1.0f / (static_cast<float>(m_usClothHeight - 1)) * 100.0f;
+	float XSeparation = 1.0f / (static_cast<float>(m_usClothWidth)) * 100.0f;
+	float YSeparation = 1.0f / (static_cast<float>(m_usClothHeight)) * 100.0f;
 	float z = 0.0f;
 	float x = m_v3ObjPos.x - (XSeparation * (m_usClothWidth / 2.0f));
 	for (unsigned int i = 0; i < m_usClothHeight; i++) {
@@ -144,15 +155,19 @@ void Cloth::Update(float _deltaTime) {
 	/*Function that iterates through all the springs, calling each spring's update	*/
 	/*function in succession.														*/
 	/*------------------------------------------------------------------------------*/
+	bool NeedsUpdating = false;
 	for (auto it : m_vecStructuralSprings){
+		if (it->m_bBroken) continue;
 		it->ApplyForce(_deltaTime);
 	}
 
 	for (auto it : m_vecShearSprings){
+		if (it->m_bBroken) continue;
 		it->ApplyForce(_deltaTime);
 	}
 
 	for (auto it : m_vecBendSprings){
+		if (it->m_bBroken) continue;
 		it->ApplyForce(_deltaTime);
 	}
 	for (auto it : m_vecClothParticleVect) {
@@ -177,8 +192,8 @@ void Cloth::SetupLinks()
 	m_vecShearSprings.clear();
 	m_vecBendSprings.clear();
 
-	float k = -15.0;
-	float b = 0.0f;
+	float k = -30.0;
+	float b = 1.0f;
 
 	//the structural links
 	//left & right structural springs
@@ -287,6 +302,9 @@ void Cloth::UpdateVectors(){
 
 	//iterating through structural spring array
 	for (auto it : m_vecStructuralSprings){
+		if (it->m_bBroken) {
+			continue;
+		}
 		m_vecIndices.push_back(it->m_pLinkedParticle0->m_iD);
 		m_vecIndices.push_back(it->m_pLinkedParticle1->m_iD);
 	}

@@ -20,8 +20,11 @@ FrameBuffer* fb = new FrameBuffer;
 std::shared_ptr<Cloth> cl;
 std::shared_ptr<Pawn> po;
 std::shared_ptr<ClothParticle> HeldParticle;
-float fanSpeed = 1.0f;
+float fanSpeed = 0.0f;
 float DistToParticle;
+
+int clothWidth = 30;
+int clothHeight = 30;
 
 void ProcessInput();
 
@@ -48,9 +51,9 @@ void Initialize() {
 
 
 
-	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
-	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
-	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
+	tx0 = new Text("WASD to move camera, hold LMB to look around. Spacebar/Left shift to ascend/descend", ARIAL, glm::vec2(30.0f, 850.0f), 0.3f);
+	tx1 = new Text("U/I to move the fan up and down. O/P to increase/decrease fan speed.", ARIAL, glm::vec2(30.0f, 830.0f), 0.3f);
+	tx2 = new Text("V/B to reduce/increase cloth width.", ARIAL, glm::vec2(30.0f, 810.0f), 0.3f);
 	fb->Init();
 }
 
@@ -88,7 +91,7 @@ void Process(void) {
 	Camera::Process();
 	cl->Update(g_DeltaTime);
 	po->Process(g_DeltaTime);
-	cl->ApplyForce(po->ObjPos, glm::vec3(0.0f, 0.0f, 20.0f), 20.0f);
+	cl->ApplyForce(po->ObjPos, glm::vec3(0.0f, 0.0f, 10.0f) * fanSpeed, 20.0f);
 
 	//------------------------//
 	glutPostRedisplay();
@@ -165,12 +168,37 @@ void ProcessInput(){
 	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD){
 		Camera::GetPos().y -= speed * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['o'] == KEY_HELD) {
+	if (InputManager::KeyArray['u'] == KEY_HELD) {
 		po->ObjPos -= glm::vec3(0.0f, 30.0f, 0.0f) * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['p'] == KEY_HELD) {
+	if (InputManager::KeyArray['i'] == KEY_HELD) {
 		po->ObjPos += glm::vec3(0.0f, 30.0f, 0.0f) * g_DeltaTime;
 	}
+	if (InputManager::KeyArray['o'] == KEY_FIRST_PRESS) {
+		fanSpeed < 0 ? fanSpeed -= 0.5f : fanSpeed = 0.0f;
+	}
+	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
+		fanSpeed += 0.5f;
+	}
+	if (InputManager::KeyArray['r'] == KEY_FIRST_PRESS) {
+		cl.reset();
+		cl = std::make_shared<Cloth>(clothWidth);
+		cl->Init();
+	}
+
+	if (InputManager::KeyArray['v'] == KEY_FIRST_PRESS) {
+		clothWidth > 4 ? clothWidth-- : clothWidth = 4;
+		cl.reset();
+		cl = std::make_shared<Cloth>(clothWidth);
+		cl->Init();
+	}
+	if (InputManager::KeyArray['b'] == KEY_FIRST_PRESS) {
+		clothWidth < 35 ? clothWidth++ : clothWidth = 35;
+		cl.reset();
+		cl = std::make_shared<Cloth>(clothWidth);
+		cl->Init();
+	}
+
 	if (InputManager::MouseButtonArray[0] == KEY_HELD){
 		glm::vec2 dis = InputManager::v2MouseLastPos - InputManager::v2MouseCurrentPos;
 		float xDif = (dis.x / UTILS::WindowWidth) * 100.0f * Clock::GetDeltaTime();
@@ -179,33 +207,6 @@ void ProcessInput(){
 		InputManager::v2MouseLastPos = InputManager::v2MouseCurrentPos;
 	}
 
-	if (InputManager::MouseButtonArray[1] == KEY_HELD && HeldParticle == nullptr){
-		glm::vec3 rayDir = InputManager::Raycast();
-		float radius = 0.5f;
-
-		for (auto it : cl->m_vecClothParticleVect){
-			glm::vec3 v = it->GetPos() - Camera::GetPos();
-			float a = glm::dot(rayDir, rayDir);
-			float b = 2 * glm::dot(v, rayDir);
-			float c = glm::dot(v, v) - radius * radius;
-			float d = b * b - 4 * a* c;
-			if (d > 0){
-				HeldParticle = it;
-				DistToParticle = glm::length(v);
-				break;
-			}
-		}
-	}
-
-	else if (HeldParticle && InputManager::MouseButtonArray[1] == KEY_RELEASED){
-		HeldParticle.reset();
-		DistToParticle = 0.0f;
-	}
-	else if (HeldParticle && InputManager::MouseButtonArray[1] == KEY_HELD){
-		glm::vec3 rayDir = InputManager::Raycast();
-		HeldParticle->GetPos() = (rayDir * DistToParticle) + Camera::GetPos();
-	}
-	
 	InputManager::ProcessInputs();
 }
 

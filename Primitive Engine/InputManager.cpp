@@ -7,7 +7,8 @@ unsigned char InputManager::KeySpecialArray[255];
 unsigned int InputManager::MouseButtonArray[3];
 glm::vec2 InputManager::v2MouseLastPos = {0.0f, 0.0f};
 glm::vec2 InputManager::v2MouseCurrentPos = {0.0f, 0.0f};
-glm::vec2 InputManager::NDCMouseCoords = {0.0f, 0.0f};
+glm::vec2 InputManager::NDCMouseCoords = { 0.0f, 0.0f };
+glm::vec3 InputManager::MouseDir = {0.0f, 0.0f, 0.0f };
 
 
 
@@ -53,7 +54,11 @@ void InputManager::Init(){
 	}
 }
 
-glm::vec3 InputManager::Raycast() {
+bool InputManager::PickObject(glm::vec3 _ObjPos) {
+	NDCMouseCoords = {
+		(2.0f * v2MouseCurrentPos.x) / UTILS::WindowWidth - 1.0f,
+		1.0f - (2.0f * v2MouseCurrentPos.y) / UTILS::WindowHeight
+	};
 	//screen pos to Proj Space
 	glm::vec4 clipCoords = glm::vec4(NDCMouseCoords, -1.0f, 1.0f);
 
@@ -64,14 +69,25 @@ glm::vec3 InputManager::Raycast() {
 		eyeCoords.x,
 		eyeCoords.y,
 		-1.0f,
-		.0f
+		0.0f
 	);
 
 	//eyespace to world space
 	glm::mat4 invViewMatrix = glm::inverse(Camera::GetViewMatrix());
 	glm::vec4 rayWorld = invViewMatrix * eyeCoords;
-	glm::vec3 rayDir = glm::normalize(glm::vec3(rayWorld));
-	return rayDir;
+	MouseDir = glm::normalize(glm::vec3(rayWorld));
+
+	float radius = 1.0f;
+
+	glm::vec3 v = _ObjPos - Camera::GetPos();
+	float a = glm::dot(MouseDir, MouseDir);
+	float b = 2 * glm::dot(v, MouseDir);
+	float c = glm::dot(v, v) - radius * radius;
+	float d = b * b - 4 * a* c;
+	if (d > 0) {
+		return true;
+	}	
+	return false;
 }
 
 void InputManager::NormKeyDown(unsigned char key, int x, int y) {
@@ -112,9 +128,6 @@ void InputManager::ProcessMouseButtons(int button, int state, int x, int y){
 
 void InputManager::ProcessMouseMovement(int x, int y){
 	v2MouseCurrentPos = {x, y};
-	NDCMouseCoords = {
-		(2.0f * x) / UTILS::WindowWidth - 1.0f,
-		1.0f - (2.0f * y) / UTILS::WindowHeight
-	};
+	
 }
 

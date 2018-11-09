@@ -6,6 +6,7 @@ class Spring;
 class Cloth {
 public:
 	Cloth();
+	Cloth(int width);
 	~Cloth();
 
 	void Init();
@@ -14,13 +15,14 @@ public:
 	void ApplyForce(glm::vec3 _ForceLocation, glm::vec3 _Force, float _ForceRadius);
 	std::vector<std::shared_ptr<ClothParticle>> m_vecClothParticleVect;
 
+	unsigned short                              m_usClothWidth;
+	unsigned short                              m_usClothHeight;
+
 private:
 	void SetupLinks();
 	void BindBuffers();
 	void UpdateVectors();
 
-	unsigned short                              m_usClothWidth;
-	unsigned short                              m_usClothHeight;
 	
 	std::vector<glm::vec3>                      m_vecPositions;
 	std::vector<GLuint>                         m_vecIndices;
