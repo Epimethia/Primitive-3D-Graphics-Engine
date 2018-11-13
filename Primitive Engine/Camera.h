@@ -13,6 +13,7 @@ public:
 	static glm::vec3 GetFront() { return Front; };
 	static glm::vec3 GetUp() { return Up; };
 	static glm::vec3 GetRight() { return Right; };
+	static glm::mat4 GetView() { return View; };
 	static void Process();
 	static int XRot;
 	static int YRot;

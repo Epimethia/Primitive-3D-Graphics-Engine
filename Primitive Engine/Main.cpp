@@ -54,8 +54,9 @@ void Render(void) {
 	//tx0->Render();
 	//tx1->Render();
 	//tx2->Render();
+	ps->Render();
 	fb->Render();
-	//ps->Render(g_DeltaTime);
+
 	//-----------------//
 
 	glutSwapBuffers();
@@ -73,6 +74,8 @@ void Process(void) {
 	//Use g_DeltaTime if possible
 	ProcessInput();
 	fb->dt += g_DeltaTime;
+
+	ps->Process(g_DeltaTime);
 	Camera::Process();
 	//------------------------//
 	glutPostRedisplay();

@@ -15,7 +15,8 @@ public:
 	~ParticleSystem();
 
 	void Init();
-	void Render(const float _deltaTime);
+	void Render();
+	void Process(const float _deltaTime);
 
 
 private:
@@ -37,6 +38,7 @@ public:
 	void Update(const float _fdeltaTime);
 	glm::vec3 GetPos();
 	int m_iID;
+	float DistToCamera;
 
 private:
 	glm::vec3 m_v3Velocity;
