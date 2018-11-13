@@ -5,7 +5,7 @@
 #include "Entity.h"
 
 Terrain::Terrain(){
-	HeightScale = 1.0f / 256.0f;
+	HeightScale = 1.0f / 512.0f;
 	NumIndices = 0;
 	PlaneVerts = std::vector<GLfloat>(GridSize * GridSize * 8);
 	NormalVals = std::vector<glm::vec3>(GridSize * GridSize * 8);
@@ -26,8 +26,10 @@ void Terrain::Init(){
 	ObjRotation = glm::vec3(90.0f, 0.0f, 180.0f);
 
 
-	LoadHeightMap("Assets/Height Maps/coastMountain513.raw");
-	Smooth();
+	LoadHeightMap("Assets/Height Maps/Volcano.raw");
+	for (int i = 0; i < 4; ++i) {
+		Smooth();
+	}
 	EstimateNormals();
 	GenerateVertBuffer();
 	GenerateIndices();
@@ -60,9 +62,9 @@ void Terrain::Render(){
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
