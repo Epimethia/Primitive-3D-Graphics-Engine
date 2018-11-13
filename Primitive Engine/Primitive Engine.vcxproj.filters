@@ -56,6 +56,9 @@
     <Filter Include="Source Files\Particle System">
       <UniqueIdentifier>{65a8cb8d-6f25-42f1-90d2-4f1cfbb66bab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AnimatedModel">
+      <UniqueIdentifier>{266f76a5-8b99-4cf1-a6d8-f0b9fc5da508}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -117,6 +120,12 @@
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files\Particle System</Filter>
+    </ClCompile>
+    <ClCompile Include="Math_3d.cpp">
+      <Filter>Source Files\AnimatedModel</Filter>
+    </ClCompile>
+    <ClCompile Include="ssAnimatedModel.cpp">
+      <Filter>Source Files\AnimatedModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Source Files\Particle System</Filter>
+    </ClInclude>
+    <ClInclude Include="Math_3d.h">
+      <Filter>Source Files\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="ssAnimatedModel.h">
+      <Filter>Source Files\AnimatedModel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

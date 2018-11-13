@@ -30,5 +30,5 @@ void buildQuad(float size, mat4 vp) {
 }
 
 void main() {
-    buildQuad(0.005f, VP);
+    buildQuad(0.05f, VP);
 }

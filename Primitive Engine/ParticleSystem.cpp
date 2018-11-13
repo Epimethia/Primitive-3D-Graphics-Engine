@@ -27,18 +27,18 @@ Particle::Particle(const glm::vec3 _Origin, const glm::vec3 _Vel, const float _M
 /*Constructs a mat4 from the positional value, used in the rendering*/
 /*process &	decrements the life value by deltaTime.					*/
 void Particle::Update(const float _fdeltaTime) {
-	m_v3Velocity.y -= 0.25f * _fdeltaTime;
+	m_v3Velocity.y -= 2.75f * _fdeltaTime;
 	m_v3Position += m_v3Velocity * _fdeltaTime;
 	m_fLifetime += _fdeltaTime;
 
 	if (m_fLifetime >= m_fMaxLifetime) {
 		m_v3Position = m_v3Origin;
 		m_v3Velocity = glm::vec3(
-			0.1f * cos(m_iID * _fdeltaTime) * randomFloat(),
-			0.25f + 0.1 * randomFloat(),
-			0.1f * sin(m_iID * _fdeltaTime) * randomFloat()
+			0.05f * cos(m_iID * _fdeltaTime) * (20.0f * randomFloat()),
+			2.55f + 0.005 * randomFloat(),
+			0.05f * sin(m_iID * _fdeltaTime) *  (20.0f * randomFloat())
 		);
-		m_fLifetime = randomFloat();
+		m_fLifetime = randomFloat() * 10.0f;
 	}
 	
 }
@@ -66,7 +66,7 @@ void ParticleSystem::Init(){
 			m_v3Pos, 
 			glm::vec3(
 				1.25 * cos(i * .167) + 0.25f * randomFloat() - 0.125f, 
-				4.0f + 0.25f * randomFloat() - 0.125f, 
+				5.0f + 0.25f * randomFloat() - 0.125f, 
 				1.25 * sin(i* .167) + 0.25f * randomFloat() - 0.125f
 			),
 			5.0f,
@@ -142,7 +142,7 @@ void ParticleSystem::Process(const float _deltaTime) {
 		m_vParticleVect[i].DistToCamera = glm::distance(Camera::GetPos(), m_vParticleVect[i].GetPos());
 	}
 
-	std::sort(m_vParticleVect.begin(), m_vParticleVect.end(), [](Particle a, Particle b) {return a.DistToCamera > b.DistToCamera; });
+	std::sort(m_vParticleVect.begin(), m_vParticleVect.end(), [&](Particle a, Particle b) { return a.DistToCamera > b.DistToCamera; });
 
 	//Rebinding the VBO with the new positional values
 	glBindBuffer(GL_ARRAY_BUFFER, m_uiVBO);
@@ -192,12 +192,12 @@ void ParticleSystem::Render(){
 	//Setting back face culling
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glPointSize(1.0f);
 	glDrawArrays(GL_POINTS, 0, m_vParticleVect.size());// (GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
 
 	//Disabling backface culling
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	//Clearing the vertex array

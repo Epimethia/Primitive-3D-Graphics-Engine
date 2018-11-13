@@ -7,6 +7,8 @@
 #include "FrameBuffer.h"
 #include "Text.h"
 #include "ParticleSystem.h"
+#include "PlayerObject.h"
+#include "ssAnimatedModel.h"
 
 float g_DeltaTime = 0.0f;
 
@@ -16,6 +18,12 @@ Text* tx1;
 Text* tx2;
 FrameBuffer* fb = new FrameBuffer;
 ParticleSystem* ps;
+PlayerObject* p = new PlayerObject;
+
+
+//init 
+std::shared_ptr<ssAnimatedModel> animatedModel;
+
 
 void ProcessInput();
 
@@ -30,15 +38,32 @@ void Initialize() {
 	glFrontFace(GL_CW);
 	glEnable(GL_MULTISAMPLE);
 	EntityManager::GetInstance();
-	Camera::GetInstance()->GetPos() = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	InputManager::Init();
-	ps = new ParticleSystem(Camera::GetPos());
+	ps = new ParticleSystem(glm::vec3(0.7f, 1.0f, 0.0f));
 	ps->Init();
 	t->Init();
+
+	p->Init(glm::vec3(0.7f, 1.0f, 0.0f));
+	p->ObjPos.y = (t->GetHeight(p->ObjPos.x, p->ObjPos.z) + 0.2f) * -1.5f;
+	Camera::GetInstance()->GetPos() = -glm::vec3(p->ObjPos.x, p->ObjPos.y, p->ObjPos.z - 0.7f);
+
 	tx0 = new Text("WASD to move", ARIAL, glm::vec2(30.0f, 850.0f), 0.7f);
 	tx1 = new Text("P to cycle through display modes", ARIAL, glm::vec2(30.0f, 800.0f), 0.7f);
 	tx2 = new Text("G to cycle through grass modes", ARIAL, glm::vec2(30.0f, 750.0f), 0.7f);
 	fb->Init();
+
+	animatedModel = std::make_shared<ssAnimatedModel>(
+		"Assets/Models/TheDude/theDude.dae",
+		"Assets/Models/TheDude/theDude.png" // texture name  
+	);
+
+	animatedModel->setCurrentAnimation(0, 30);// set idle animation a
+	//animatedModel->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	animatedModel->setRotation(glm::vec3(0.0f));
+	animatedModel->setScale(glm::vec3(0.001f)); 
+	animatedModel->setSpeed(0.0f);
+
 }
 
 
@@ -55,8 +80,10 @@ void Render(void) {
 	//tx1->Render();
 	//tx2->Render();
 	ps->Render();
-	fb->Render();
+	//p->Render();
+	animatedModel->render(g_DeltaTime, t);
 
+	fb->Render();
 	//-----------------//
 
 	glutSwapBuffers();
@@ -74,7 +101,7 @@ void Process(void) {
 	//Use g_DeltaTime if possible
 	ProcessInput();
 	fb->dt += g_DeltaTime;
-
+	p->Process(g_DeltaTime);
 	ps->Process(g_DeltaTime);
 	Camera::Process();
 	//------------------------//
@@ -129,26 +156,58 @@ int main(int argc, char **argv) {
 }
 
 void ProcessInput(){
+	animatedModel->move(0.0f);
 
-	auto CameraPos = &Camera::GetPos();
+
 	if (InputManager::KeyArray['w'] == KEY_HELD) {
-		CameraPos->z -= 0.8f * g_DeltaTime;
+		animatedModel->setRotation(glm::vec3(0.0f, -180.0f, 0.0f));
+		if (animatedModel->bMoving == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(31, 50);
+		}
+		p->ObjPos.z -= 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['s'] == KEY_HELD) {
-		CameraPos->z += 0.8f * g_DeltaTime;
+	else if (InputManager::KeyArray['s'] == KEY_HELD) {
+		animatedModel->setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+		if (animatedModel->bMoving == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(31, 50);
+		}
+		p->ObjPos.z += 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['a'] == KEY_HELD) {
-		CameraPos->x -= 0.8f * g_DeltaTime;
+	else if (InputManager::KeyArray['a'] == KEY_HELD) {
+		animatedModel->setRotation(glm::vec3(0.0f, -90.0f, 0.0f));
+		if (animatedModel->bMoving == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(31, 50);
+		}
+		p->ObjPos.x -= 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray['d'] == KEY_HELD) {
-		CameraPos->x += 0.8f * g_DeltaTime;
+	else if (InputManager::KeyArray['d'] == KEY_HELD) {
+		animatedModel->setRotation(glm::vec3(0.0f, 90.0f, 0.0f));
+		if (animatedModel->bMoving == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(31, 50);
+		}
+		p->ObjPos.x += 0.8f * g_DeltaTime;
 	}
-	if (InputManager::KeyArray[32] == KEY_HELD) {
-		CameraPos->y += 0.8f * g_DeltaTime;
+	else if (InputManager::KeyArray[32] == KEY_FIRST_PRESS) {
+		p->Jump();
+		if (animatedModel->bMoving == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(71, 80);
+		}
+
 	}
-	if (InputManager::KeySpecialArray[GLUT_KEY_SHIFT_L] == KEY_HELD) {
-		CameraPos->y -= 0.8f * g_DeltaTime;
+	else {
+		animatedModel->rotate(0.0f);
+		if (animatedModel->bMoving == true) {
+			animatedModel->bMoving = false;
+			animatedModel->setCurrentAnimation(0, 30);
+		}
+		
 	}
+
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
 		fb->CycleDisplayMode();
 	}
@@ -156,19 +215,26 @@ void ProcessInput(){
 		t->ToggleGrass();
 	}
 
-	if (CameraPos->x > 2.54f) {
-		CameraPos->x = 2.54f;
-	}
-	if (CameraPos->x < -2.54f) {
-		CameraPos->x = -2.54f;
-	}
-	if (CameraPos->y > 2.54f) {
-		CameraPos->y = 2.54f;
-	}
-	if (CameraPos->y < -2.54f) {
-		CameraPos->y = -2.54f;
-	}
 
+
+	if (p->ObjPos.x > 2.52f) {
+		p->ObjPos.x = 2.52f;
+	}
+	if (p->ObjPos.x < -2.52f) {
+		p->ObjPos.x = -2.52f;
+	}
+	if (p->ObjPos.z > 2.52f) {
+		p->ObjPos.z = 2.52f;
+	}
+	if (p->ObjPos.z < -2.52f) {
+		p->ObjPos.z = -2.52f;
+	}
+	
+	if (p->ObjPos.y < t->GetHeight(p->ObjPos.x, p->ObjPos.z)) {
+		p->ObjPos.y = (t->GetHeight(p->ObjPos.x, p->ObjPos.z));
+	}
+	animatedModel->setPosition(p->ObjPos);
+	Camera::GetPos() = glm::vec3(p->ObjPos.x, p->ObjPos.y + 0.5f, p->ObjPos.z + 0.5f);
 	InputManager::ProcessKeyInput();
 }
 

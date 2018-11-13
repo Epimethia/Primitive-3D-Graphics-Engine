@@ -21,8 +21,7 @@ Camera::~Camera() {
 std::shared_ptr<Camera> Camera::GetInstance() {
 	if (CameraPtr == nullptr) CameraPtr = std::shared_ptr<Camera>(new Camera);
 	std::cout << "Camera Created\n";
-	glm::vec3 camTarget = { 0.0f, 0.0f, 0.0f };
-	Front = glm::normalize(CameraPos - camTarget);
+
 	glm::vec3 tempUp = { 0.0f, 1.0f, 0.0f };
 	glm::vec3 Right = glm::normalize(glm::cross(tempUp, Front));
 	Up = glm::cross(Front, Right);
@@ -52,7 +51,7 @@ glm::mat4 Camera::GetVPMatrix() {
 }
 
 void Camera::Process(){
-	glm::vec3 camTarget = CameraPos - Front;
+	glm::vec3 camTarget = glm::vec3(0.0f, -1.0f, -1.0f) + CameraPos;
 	glm::vec3 tempUp = { 0.0f, 1.0f, 0.0f };
 
 	Front = glm::normalize(CameraPos - camTarget);

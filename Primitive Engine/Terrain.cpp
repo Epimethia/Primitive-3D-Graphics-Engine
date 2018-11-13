@@ -5,7 +5,7 @@
 #include "Entity.h"
 
 Terrain::Terrain(){
-	HeightScale = 1.0f / 512.0f;
+	HeightScale = 1.0f / 256.0f;
 	NumIndices = 0;
 	PlaneVerts = std::vector<GLfloat>(GridSize * GridSize * 8);
 	NormalVals = std::vector<glm::vec3>(GridSize * GridSize * 8);
@@ -27,7 +27,7 @@ void Terrain::Init(){
 
 
 	LoadHeightMap("Assets/Height Maps/Volcano.raw");
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		Smooth();
 	}
 	EstimateNormals();
@@ -78,14 +78,12 @@ void Terrain::Render(){
 float Terrain::GetHeight(float x, float y){
 	float a = (GridSize - 1.0f) * (1.0f/ GridSize);
 	// Transform from terrain local space to "cell" space.
-	//std::cout << x << " | " << y << std::endl;
 	float c = ((x * 100.0f) + (GridSize / 2.0f) /*+ a / Separation*/);
 	float d = ((y * 100.0f) + (GridSize / 2.0f)/* - a / -Separation*/);
 
 	// Get the row and column we are in.
 	int row = static_cast<int>(std::floorf(d));
 	int col = static_cast<int>(std::floorf(c));
-	//std::cout << row << " | " << col << std::endl;
 
 	// Grab the heights of the cell we are in.
 	// A*--*B
@@ -361,7 +359,7 @@ void Terrain::EstimateNormals(){
 
 			glm::vec3 N = glm::cross(tanZ, tanX);
 			glm::normalize(N);
-			NormalVals[(i-2) * GridSize + (j-2)] = N;
+			NormalVals[(i-2) * GridSize + (j-2)] = N * -1.0f;
 		}
 	}
 }

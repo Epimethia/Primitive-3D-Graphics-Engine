@@ -8,7 +8,7 @@ PlayerObject::~PlayerObject(){}
 void PlayerObject::Init(glm::vec3 _Pos){
 	//Player object is a sphere
 	ObjPos = _Pos;
-	ObjScale = glm::vec3(0.005f, 0.005f, 0.005f);
+	ObjScale = glm::vec3(0.015f, 0.015f, 0.015f);
 	ObjRotation = glm::vec3();
 	VAO = EntityManager::GetMesh(SPHERE_ENTITY)->VAO;
 	NumIndices = EntityManager::GetMesh(SPHERE_ENTITY)->NumIndices;
@@ -17,7 +17,8 @@ void PlayerObject::Init(glm::vec3 _Pos){
 }
 
 void PlayerObject::Process(float _gDeltaTime){
-
+	Velocity -= glm::vec3(0.0f, 0.1f, 0.0f);
+	ObjPos += Velocity * _gDeltaTime;
 }
 
 void PlayerObject::Render(){
@@ -71,7 +72,7 @@ void PlayerObject::Render(){
 	//Setting back face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	glFrontFace(GL_CW);
 
 	glDrawElements(GL_TRIANGLES, static_cast<GLuint>(NumIndices), GL_UNSIGNED_INT, 0);
 
@@ -81,3 +82,10 @@ void PlayerObject::Render(){
 	//Clearing the vertex array
 	glBindVertexArray(0);
 }
+
+void PlayerObject::Jump()
+{
+	Velocity = { 0.0f, 3.0f, 0.0f };
+}
+
+
