@@ -85,7 +85,10 @@ void PlayerObject::Render(){
 
 void PlayerObject::Jump()
 {
-	Velocity = { 0.0f, 3.0f, 0.0f };
+	if (bJump == false){
+		Velocity = {0.0f, 3.0f, 0.0f};
+		bJump = true;
+	}
 }
 
 

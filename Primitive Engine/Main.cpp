@@ -158,8 +158,14 @@ int main(int argc, char **argv) {
 void ProcessInput(){
 	animatedModel->move(0.0f);
 
-
-	if (InputManager::KeyArray['w'] == KEY_HELD) {
+	if (InputManager::KeyArray[32] == KEY_HELD) {
+		if (p->bJump == false) {
+			animatedModel->bMoving = true;
+			animatedModel->setCurrentAnimation(71, 80);
+			p->Jump();
+		}
+	}
+	if (InputManager::KeyArray['w'] == KEY_HELD){
 		animatedModel->setRotation(glm::vec3(0.0f, -180.0f, 0.0f));
 		if (animatedModel->bMoving == false) {
 			animatedModel->bMoving = true;
@@ -191,21 +197,12 @@ void ProcessInput(){
 		}
 		p->ObjPos.x += 0.8f * g_DeltaTime;
 	}
-	else if (InputManager::KeyArray[32] == KEY_FIRST_PRESS) {
-		p->Jump();
-		if (animatedModel->bMoving == false) {
-			animatedModel->bMoving = true;
-			animatedModel->setCurrentAnimation(71, 80);
-		}
-
-	}
 	else {
 		animatedModel->rotate(0.0f);
-		if (animatedModel->bMoving == true) {
+		if (animatedModel->bMoving && !p->bJump) {
 			animatedModel->bMoving = false;
 			animatedModel->setCurrentAnimation(0, 30);
 		}
-		
 	}
 
 	if (InputManager::KeyArray['p'] == KEY_FIRST_PRESS) {
@@ -215,23 +212,19 @@ void ProcessInput(){
 		t->ToggleGrass();
 	}
 
-
-
-	if (p->ObjPos.x > 2.52f) {
-		p->ObjPos.x = 2.52f;
-	}
-	if (p->ObjPos.x < -2.52f) {
-		p->ObjPos.x = -2.52f;
-	}
-	if (p->ObjPos.z > 2.52f) {
-		p->ObjPos.z = 2.52f;
-	}
-	if (p->ObjPos.z < -2.52f) {
-		p->ObjPos.z = -2.52f;
-	}
+	//checking if the player is out of bounds, as to avoid exception errors
+	if (p->ObjPos.x > 2.52f)  p->ObjPos.x = 2.52f; 
+	if (p->ObjPos.x < -2.52f) p->ObjPos.x = -2.52f; 
+	if (p->ObjPos.z > 2.52f)  p->ObjPos.z = 2.52f; 
+	if (p->ObjPos.z < -2.52f) p->ObjPos.z = -2.52f; 
 	
 	if (p->ObjPos.y < t->GetHeight(p->ObjPos.x, p->ObjPos.z)) {
 		p->ObjPos.y = (t->GetHeight(p->ObjPos.x, p->ObjPos.z));
+		if (p->bJump){
+			p->bJump = false;
+			animatedModel->bMoving = false;
+			animatedModel->setCurrentAnimation(0, 30);
+		}
 	}
 	animatedModel->setPosition(p->ObjPos);
 	Camera::GetPos() = glm::vec3(p->ObjPos.x, p->ObjPos.y + 0.5f, p->ObjPos.z + 0.5f);

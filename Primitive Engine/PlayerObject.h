@@ -11,6 +11,7 @@ public:
 	glm::vec3 ObjPos;
 	void Render();
 	void Jump();
+	bool bJump;
 private:
 	GLuint VAO, VBO, EBO, Texture, Shader;
 	glm::vec3 ObjScale, ObjRotation;
